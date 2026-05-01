@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janis Garden - จัดสวนสวย ปลูกต้นไม้</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #2d5a27;
+    --green-mid: #4a8c42;
+    --green-light: #7db87a;
+    --green-pale: #e8f5e3;
+    --brown-dark: #5c3d2e;
+    --brown-mid: #8b5e3c;
+    --brown-light: #c4956a;
+    --brown-pale: #f5ede3;
+    --cream: #faf7f2;
+    --white: #ffffff;
+    --text-dark: #2c2c2c;
+    --text-mid: #555;
+    --text-light: #888;
+    --shadow: 0 4px 20px rgba(45,90,39,0.12);
+    --shadow-hover: 0 8px 32px rgba(45,90,39,0.2);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(250,247,242,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(74,140,66,0.15);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--green-dark);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo span { font-size: 1.8rem; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--text-mid);
+    font-size: 0.95rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green-dark); }
+  .nav-cta {
+    background: var(--green-dark); color: var(--white);
+    padding: 0.5rem 1.4rem; border-radius: 30px;
+    text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .nav-cta:hover { background: var(--green-mid); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background:
+      linear-gradient(135deg, rgba(45,90,39,0.75) 0%, rgba(92,61,46,0.5) 100%),
+      url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1600&q=80') center/cover no-repeat;
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 0 8%;
+    padding-top: 70px;
+  }
+  .hero-content { max-width: 620px; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff; border-radius: 30px;
+    padding: 0.4rem 1.2rem; font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(6px);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    color: #fff; line-height: 1.2;
+    margin-bottom: 1.2rem; font-weight: 700;
+  }
+  .hero p { color: rgba(255,255,255,0.88); font-size: 1.1rem; margin-bottom: 2.5rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--brown-light); color: var(--white);
+    padding: 0.85rem 2rem; border-radius: 30px;
+    text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    transition: all 0.25s;
+  }
+  .btn-primary:hover { background: var(--brown-mid); transform: translateY(-2px); }
+  .btn-outline {
+    border: 2px solid rgba(255,255,255,0.7); color: #fff;
+    padding: 0.85rem 2rem; border-radius: 30px;
+    text-decoration: none; font-weight: 500; font-size: 0.95rem;
+    transition: all 0.25s;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+
+  /* SECTION BASE */
+  section { padding: 6rem 8%; }
+  .section-label {
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.15em;
+    color: var(--green-mid); text-transform: uppercase; margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    color: var(--green-dark); font-weight: 700;
+    margin-bottom: 1rem; line-height: 1.3;
+  }
+  .section-sub { color: var(--text-mid); font-size: 1rem; max-width: 560px; }
+
+  /* SERVICES */
+  .services { background: var(--white); }
+  .services-header { text-align: center; margin-bottom: 3.5rem; }
+  .services-header .section-sub { margin: 0 auto; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .service-card {
+    background: var(--cream);
+    border-radius: var(--radius);
+    padding: 2rem 1.8rem;
+    border: 1px solid rgba(74,140,66,0.15);
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--green-light);
+    border-radius: 4px 0 0 4px;
+    transition: width 0.3s;
+  }
+  .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .service-card:hover::before { width: 6px; background: var(--green-dark); }
+  .service-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin-bottom: 1.2rem;
+  }
+  .service-card h3 { font-size: 1.15rem; font-weight: 600; color: var(--green-dark); margin-bottom: 0.6rem; }
+  .service-card p { font-size: 0.92rem; color: var(--text-mid); line-height: 1.65; }
+
+  /* PORTFOLIO */
+  .portfolio { background: var(--cream); }
+  .portfolio-header { margin-bottom: 3rem; }
+  .portfolio-filter {
+    display: flex; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 2rem;
+  }
+  .filter-btn {
+    padding: 0.45rem 1.2rem;
+    border-radius: 30px; border: 1.5px solid var(--green-light);
+    background: transparent; color: var(--green-mid);
+    font-size: 0.88rem; font-weight: 500; font-family: 'Sarabun', sans-serif;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--green-dark); color: var(--white); border-color: var(--green-dark);
+  }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 240px;
+    gap: 1rem;
+  }
+  .portfolio-item {
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+  .portfolio-item.wide { grid-column: span 2; }
+  .portfolio-item.tall { grid-row: span 2; }
+  .portfolio-item img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s;
+  }
+  .portfolio-item:hover img { transform: scale(1.08); }
+  .portfolio-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(45,90,39,0.85) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end; padding: 1.2rem;
+  }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-overlay span {
+    color: #fff; font-weight: 600; font-size: 0.95rem;
+    border-bottom: 2px solid var(--green-light); padding-bottom: 2px;
+  }
+
+  /* TIPS */
+  .tips { background: var(--green-dark); }
+  .tips .section-title { color: #fff; }
+  .tips .section-label { color: var(--green-light); }
+  .tips .section-sub { color: rgba(255,255,255,0.7); }
+  .tips-header { margin-bottom: 3rem; }
+  .tips-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem;
+  }
+  .tip-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius); padding: 1.8rem;
+    transition: background 0.3s;
+  }
+  .tip-card:hover { background: rgba(255,255,255,0.14); }
+  .tip-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; color: var(--green-light);
+    font-weight: 700; line-height: 1; margin-bottom: 0.8rem;
+  }
+  .tip-card h3 { color: #fff; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .tip-card p { color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.6; }
+
+  /* SHOP */
+  .shop { background: var(--white); }
+  .shop-header { margin-bottom: 3rem; }
+  .shop-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;
+  }
+  .shop-card {
+    border-radius: var(--radius); overflow: hidden;
+    border: 1px solid rgba(74,140,66,0.15);
+    background: var(--cream); transition: all 0.3s;
+  }
+  .shop-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .shop-img {
+    height: 180px; overflow: hidden; position: relative;
+  }
+  .shop-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .shop-card:hover .shop-img img { transform: scale(1.06); }
+  .shop-tag {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--brown-light); color: #fff;
+    font-size: 0.72rem; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .shop-info { padding: 1.2rem 1.2rem 1.5rem; }
+  .shop-info h3 { font-size: 1rem; font-weight: 600; color: var(--green-dark); margin-bottom: 0.3rem; }
+  .shop-info p { font-size: 0.85rem; color: var(--text-mid); margin-bottom: 0.8rem; }
+  .shop-price {
+    font-size: 1.2rem; font-weight: 700; color: var(--brown-mid);
+    font-family: 'Playfair Display', serif;
+  }
+  .shop-price span { font-size: 0.8rem; color: var(--text-light); font-family: 'Sarabun', sans-serif; font-weight: 400; }
+
+  /* CONTACT */
+  .contact { background: var(--brown-pale); }
+  .contact-wrapper {
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: start;
+  }
+  .contact-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; color: var(--brown-dark);
+    margin-bottom: 1rem; line-height: 1.3;
+  }
+  .contact-info p { color: var(--text-mid); margin-bottom: 2rem; }
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem;
+  }
+  .contact-detail-icon {
+    width: 40px; height: 40px; min-width: 40px;
+    background: var(--brown-light); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .contact-detail div h4 { font-size: 0.85rem; color: var(--text-light); font-weight: 500; }
+  .contact-detail div p { font-size: 0.95rem; color: var(--text-dark); font-weight: 500; margin: 0; }
+
+  .contact-form {
+    background: var(--white);
+    border-radius: var(--radius); padding: 2.5rem;
+    box-shadow: var(--shadow);
+  }
+  .contact-form h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: var(--green-dark); margin-bottom: 0.3rem;
+  }
+  .contact-form > p { font-size: 0.88rem; color: var(--text-light); margin-bottom: 1.8rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label {
+    display: block; font-size: 0.85rem; font-weight: 600;
+    color: var(--text-mid); margin-bottom: 0.4rem;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%; padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(74,140,66,0.25);
+    border-radius: var(--radius-sm); background: var(--cream);
+    font-family: 'Sarabun', sans-serif; font-size: 0.95rem;
+    color: var(--text-dark); transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--green-mid);
+    background: #fff;
+  }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+  .btn-submit {
+    width: 100%; padding: 1rem;
+    background: var(--green-dark); color: #fff;
+    border: none; border-radius: 30px;
+    font-family: 'Sarabun', sans-serif; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .btn-submit:hover { background: var(--green-mid); transform: translateY(-2px); }
+  .btn-submit:disabled { background: var(--green-light); cursor: not-allowed; }
+  .form-success {
+    display: none; text-align: center; padding: 2rem;
+  }
+  .form-success .check {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--green-pale); margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+  }
+  .form-success h4 { color: var(--green-dark); font-size: 1.2rem; margin-bottom: 0.5rem; }
+  .form-success p { color: var(--text-mid); font-size: 0.9rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--brown-dark);
+    color: rgba(255,255,255,0.7);
+    padding: 3rem 8% 2rem;
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem;
+  }
+  footer h4 {
+    font-family: 'Playfair Display', serif;
+    color: #fff; font-size: 1.1rem; margin-bottom: 1rem;
+  }
+  footer p { font-size: 0.88rem; line-height: 1.7; }
+  footer ul { list-style: none; }
+  footer ul li { margin-bottom: 0.5rem; }
+  footer ul li a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+  footer ul li a:hover { color: #fff; }
+  .footer-bottom {
+    background: var(--brown-dark);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 1rem 8%;
+    text-align: center; font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .admin-link {
+    color: rgba(255,255,255,0.35);
+    text-decoration: none; font-size: 0.78rem;
+    transition: color 0.2s;
+  }
+  .admin-link:hover { color: rgba(255,255,255,0.7); }
+
+  /* MODAL / LIGHTBOX */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8); z-index: 999;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: #fff; border-radius: var(--radius);
+    max-width: 900px; width: 90%; max-height: 90vh;
+    overflow: auto; position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: rgba(0,0,0,0.5); color: #fff;
+    border: none; width: 36px; height: 36px; border-radius: 50%;
+    font-size: 1.2rem; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .modal-box img { width: 100%; border-radius: var(--radius) var(--radius) 0 0; }
+  .modal-info { padding: 1.5rem 2rem; }
+  .modal-info h3 { font-size: 1.3rem; color: var(--green-dark); margin-bottom: 0.4rem; }
+  .modal-info p { color: var(--text-mid); font-size: 0.92rem; }
+
+  /* ADMIN LOGIN MODAL */
+  .admin-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(45,90,39,0.92); z-index: 9999;
+    align-items: center; justify-content: center;
+  }
+  .admin-modal-overlay.active { display: flex; }
+  .admin-login-box {
+    background: #fff; border-radius: var(--radius);
+    padding: 3rem; width: 100%; max-width: 420px;
+    text-align: center;
+  }
+  .admin-login-box .leaf { font-size: 3rem; margin-bottom: 1rem; }
+  .admin-login-box h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--green-dark); margin-bottom: 0.4rem;
+  }
+  .admin-login-box p { font-size: 0.88rem; color: var(--text-light); margin-bottom: 2rem; }
+  .admin-login-box input {
+    width: 100%; padding: 0.8rem 1.2rem;
+    border: 1.5px solid rgba(74,140,66,0.3);
+    border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif; font-size: 0.95rem;
+    margin-bottom: 1rem; outline: none;
+  }
+  .admin-login-box input:focus { border-color: var(--green-mid); }
+  .admin-login-btn {
+    width: 100%; padding: 0.9rem;
+    background: var(--green-dark); color: #fff;
+    border: none; border-radius: 30px;
+    font-family: 'Sarabun', sans-serif; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .admin-login-btn:hover { background: var(--green-mid); }
+  .admin-err { color: #c0392b; font-size: 0.85rem; margin-bottom: 0.8rem; display: none; }
+
+  /* ADMIN PANEL */
+  .admin-panel {
+    display: none; position: fixed; inset: 0;
+    background: var(--cream); z-index: 9998; overflow-y: auto;
+  }
+  .admin-panel.active { display: block; }
+  .admin-header {
+    background: var(--green-dark); color: #fff;
+    padding: 1rem 5%;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .admin-header h2 {
+    font-family: 'Playfair Display', serif; font-size: 1.4rem;
+  }
+  .admin-header-btns { display: flex; gap: 0.8rem; align-items: center; }
+  .admin-close-btn, .admin-save-btn {
+    padding: 0.5rem 1.4rem; border-radius: 30px;
+    font-family: 'Sarabun', sans-serif; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .admin-close-btn { background: transparent; border: 1.5px solid rgba(255,255,255,0.5); color: #fff; }
+  .admin-close-btn:hover { background: rgba(255,255,255,0.15); }
+  .admin-save-btn { background: var(--brown-light); border: none; color: #fff; }
+  .admin-save-btn:hover { background: var(--brown-mid); }
+
+  .admin-content { padding: 2rem 5%; }
+  .admin-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--green-dark); margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem; border-bottom: 2px solid var(--green-pale);
+  }
+  .admin-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .admin-item {
+    background: #fff; border-radius: var(--radius);
+    border: 1.5px solid rgba(74,140,66,0.2); overflow: hidden;
+  }
+  .admin-item-img { height: 160px; position: relative; }
+  .admin-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .admin-item-info { padding: 1rem; }
+  .admin-item-info input {
+    width: 100%; padding: 0.5rem 0.7rem;
+    border: 1px solid rgba(74,140,66,0.25); border-radius: 6px;
+    font-family: 'Sarabun', sans-serif; font-size: 0.85rem;
+    margin-bottom: 0.5rem; outline: none;
+  }
+  .admin-item-actions { display: flex; gap: 0.5rem; }
+  .btn-replace {
+    flex: 1; padding: 0.45rem; font-size: 0.8rem;
+    background: var(--green-pale); color: var(--green-dark);
+    border: 1px solid var(--green-light); border-radius: 6px;
+    cursor: pointer; font-family: 'Sarabun', sans-serif; font-weight: 600;
+  }
+  .btn-replace:hover { background: var(--green-light); color: #fff; }
+  .hidden-file { display: none; }
+  .add-photo-btn {
+    height: 160px; border: 2px dashed var(--green-light);
+    border-radius: var(--radius); display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; background: var(--green-pale);
+    color: var(--green-mid); transition: all 0.2s;
+    font-size: 0.9rem; font-weight: 500; gap: 0.5rem;
+    padding: 1rem;
+  }
+  .add-photo-btn:hover { background: rgba(74,140,66,0.15); border-color: var(--green-dark); }
+  .add-photo-btn span { font-size: 2rem; }
+  .admin-toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--green-dark); color: #fff;
+    padding: 1rem 1.5rem; border-radius: var(--radius-sm);
+    font-size: 0.9rem; font-weight: 500; z-index: 99999;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.35s;
+  }
+  .admin-toast.show { transform: translateY(0); opacity: 1; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.65s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 0 5%; }
+    .nav-links { display: none; }
+    section { padding: 4rem 5%; }
+    .contact-wrapper { grid-template-columns: 1fr; gap: 2.5rem; }
+    footer { grid-template-columns: 1fr; gap: 1.5rem; }
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+    .portfolio-item.wide { grid-column: span 1; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-item.tall { grid-row: span 1; }
+    .hero h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">
+    <span>🌿</span> Janis Garden
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">บริการ</a></li>
+    <li><a href="#portfolio">ผลงาน</a></li>
+    <li><a href="#tips">คำแนะนำ</a></li>
+    <li><a href="#shop">ร้านค้า</a></li>
+    <li><a href="#contact">ติดต่อ</a></li>
+  </ul>
+  <a class="nav-cta" href="#contact">ขอใบเสนอราคา</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🌱 บริการจัดสวนครบวงจร</div>
+    <h1>สร้างสรรค์สวนสวย<br>ด้วยมือที่รักธรรมชาติ</h1>
+    <p>ออกแบบและจัดสวนตามสไตล์ที่คุณฝัน ด้วยประสบการณ์และความเชี่ยวชาญ พร้อมบริการดูแลรักษาหลังติดตั้ง</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#portfolio">ดูผลงาน</a>
+      <a class="btn-outline" href="#contact">ปรึกษาฟรี</a>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services reveal" id="services">
+  <div class="services-header">
+    <div class="section-label">บริการของเรา</div>
+    <h2 class="section-title">ครบครันทุกความต้องการ<br>เกี่ยวกับสวนของคุณ</h2>
+    <p class="section-sub">ให้บริการตั้งแต่ออกแบบ ปลูก ดูแล ไปจนถึงจำหน่ายต้นไม้และอุปกรณ์ตกแต่งสวน</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🏡</div>
+      <h3>รับจัดสวน</h3>
+      <p>ออกแบบและจัดสวนตามสไตล์ที่คุณต้องการ ทั้งสวนในบ้าน สวนสำนักงาน คอนโด และพื้นที่เชิงพาณิชย์</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌳</div>
+      <h3>ปลูกต้นไม้</h3>
+      <p>บริการปลูกต้นไม้ทุกชนิด ทั้งไม้ยืนต้น ไม้ดอก ไม้ประดับ และไม้มงคล โดยผู้เชี่ยวชาญ</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">✂️</div>
+      <h3>ตัดแต่งต้นไม้ & ตัดหน้าดิน</h3>
+      <p>บริการตัดแต่งทรงพุ่ม ตัดหน้าดิน และดูแลรักษาสวนอย่างสม่ำเสมอ ให้สวนสวยอยู่เสมอ</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💬</div>
+      <h3>ให้คำแนะนำ</h3>
+      <p>ปรึกษาเรื่องต้นไม้ การดูแล ป้องกันโรค การให้ปุ๋ย และการเลือกพันธุ์ไม้ที่เหมาะกับพื้นที่</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🪴</div>
+      <h3>จำหน่ายต้นไม้</h3>
+      <p>คัดสรรต้นไม้คุณภาพดี หลากหลายพันธุ์ ราคาสมเหตุสมผล ทั้งพันธุ์ไม้หายากและทั่วไป</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🪵</div>
+      <h3>อุปกรณ์ตกแต่งสวน</h3>
+      <p>จำหน่ายกระถาง หิน ก้อนใหญ่ น้ำพุ ไฟสวน รั้วไม้ และของตกแต่งสวนสไตล์ธรรมชาติ</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio reveal" id="portfolio">
+  <div class="portfolio-header">
+    <div class="section-label">ผลงานของเรา</div>
+    <h2 class="section-title">ทุกสวน คือผลงานชิ้นเอก</h2>
+  </div>
+  <div class="portfolio-filter">
+    <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+    <button class="filter-btn" data-filter="garden">จัดสวน</button>
+    <button class="filter-btn" data-filter="trim">ตัดแต่ง</button>
+    <button class="filter-btn" data-filter="plant">ปลูกต้นไม้</button>
+    <button class="filter-btn" data-filter="deco">ตกแต่ง</button>
+  </div>
+  <div class="portfolio-grid" id="portfolioGrid">
+    <!-- Items injected by JS -->
+  </div>
+</section>
+
+<!-- TIPS -->
+<section class="tips reveal" id="tips">
+  <div class="tips-header">
+    <div class="section-label">ความรู้จากผู้เชี่ยวชาญ</div>
+    <h2 class="section-title">เคล็ดลับดูแลสวน<br>ให้สวยตลอดปี</h2>
+    <p class="section-sub">คำแนะนำง่ายๆ จากประสบการณ์จริง</p>
+  </div>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-num">01</div>
+      <h3>รดน้ำให้ถูกเวลา</h3>
+      <p>ควรรดน้ำช่วงเช้าตรู่หรือเย็น เพื่อลดการระเหยและป้องกันโรคใบไหม้จากแดดจัด</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">02</div>
+      <h3>เลือกดินให้เหมาะ</h3>
+      <p>ต้นไม้แต่ละชนิดต้องการดินต่างกัน ดินร่วนปนทรายเหมาะกับส่วนใหญ่ ดินพรุเหมาะกับกุหลาบ</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">03</div>
+      <h3>ให้ปุ๋ยอย่างสม่ำเสมอ</h3>
+      <p>ปุ๋ยคอกเหมาะสำหรับปรับปรุงดิน ส่วนปุ๋ยสูตร 15-15-15 ช่วยให้ต้นไม้เติบโตแข็งแรง</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">04</div>
+      <h3>ตัดแต่งสม่ำเสมอ</h3>
+      <p>การตัดแต่งกิ่งช่วยให้ต้นไม้แข็งแรง ทรงพุ่มสวย และช่วยกระตุ้นการออกดอกได้ดี</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">05</div>
+      <h3>สังเกตโรคและแมลง</h3>
+      <p>หมั่นตรวจสอบใต้ใบ หากพบแมลงหรือจุดด่างผิดปกติ ควรแก้ไขทันทีก่อนลุกลาม</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">06</div>
+      <h3>แสงแดดคือชีวิต</h3>
+      <p>รู้ว่าต้นไม้ต้องการแสงมากน้อยแค่ไหน จัดวางให้ถูกตำแหน่ง ต้นไม้จะแข็งแรงและสวยงาม</p>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="shop reveal" id="shop">
+  <div class="shop-header">
+    <div class="section-label">ร้านค้าออนไลน์</div>
+    <h2 class="section-title">ต้นไม้และของตกแต่งสวน</h2>
+    <p class="section-sub">คัดสรรสินค้าคุณภาพดี พร้อมส่งถึงบ้านคุณ</p>
+  </div>
+  <div class="shop-grid">
+    <div class="shop-card">
+      <div class="shop-img">
+        <img src="https://images.unsplash.com/photo-1585059895524-72359e06133a?w=400&q=80" alt="กุหลาบ">
+        <span class="shop-tag">ยอดนิยม</span>
+      </div>
+      <div class="shop-info">
+        <h3>กุหลาบหลากสี</h3>
+        <p>พันธุ์คัดสรร ดอกสวย กลิ่นหอม</p>
+        <div class="shop-price">฿180 <span>/ ต้น</span></div>
+      </div>
+    </div>
+    <div class="shop-card">
+      <div class="shop-img">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80" alt="ไม้ประดับ">
+      </div>
+      <div class="shop-info">
+        <h3>ไม้ประดับในร่ม</h3>
+        <p>เหมาะสำหรับในบ้านและออฟฟิศ</p>
+        <div class="shop-price">฿250 <span>/ ต้น</span></div>
+      </div>
+    </div>
+    <div class="shop-card">
+      <div class="shop-img">
+        <img src="https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=400&q=80" alt="กระถาง">
+        <span class="shop-tag">ใหม่</span>
+      </div>
+      <div class="shop-info">
+        <h3>กระถางดินเผา</h3>
+        <p>สไตล์วินเทจ คงทน ระบายน้ำดี</p>
+        <div class="shop-price">฿350 <span>/ ใบ</span></div>
+      </div>
+    </div>
+    <div class="shop-card">
+      <div class="shop-img">
+        <img src="https://images.unsplash.com/photo-1470058869958-2a77ade41c02?w=400&q=80" alt="ปุ๋ย">
+      </div>
+      <div class="shop-info">
+        <h3>ปุ๋ยหมักอินทรีย์</h3>
+        <p>ปลอดภัย ไม่มีสารเคมี 5 กก.</p>
+        <div class="shop-price">฿120 <span>/ ถุง</span></div>
+      </div>
+    </div>
+    <div class="shop-card">
+      <div class="shop-img">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="ต้นโป๊ยเซียน">
+      </div>
+      <div class="shop-info">
+        <h3>ต้นโป๊ยเซียน</h3>
+        <p>ไม้มงคล ดูแลง่าย สีสันสวยงาม</p>
+        <div class="shop-price">฿320 <span>/ ต้น</span></div>
+      </div>
+    </div>
+    <div class="shop-card">
+      <div class="shop-img">
+        <img src="https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&q=80" alt="ไฟสวน">
+        <span class="shop-tag">แนะนำ</span>
+      </div>
+      <div class="shop-info">
+        <h3>ไฟตกแต่งสวน Solar</h3>
+        <p>ประหยัดพลังงาน กันน้ำ IP65</p>
+        <div class="shop-price">฿450 <span>/ ชุด</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a class="btn-primary" href="#contact" style="display:inline-block;background:var(--green-dark);color:#fff;padding:0.85rem 2.5rem;border-radius:30px;text-decoration:none;font-weight:600;transition:all 0.25s;">สนใจสั่งซื้อ ติดต่อเรา</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact reveal" id="contact">
+  <div class="contact-wrapper">
+    <div class="contact-info">
+      <div class="section-label">ติดต่อเรา</div>
+      <h2>พูดคุยกับเรา<br>เราพร้อมช่วยเสมอ</h2>
+      <p>กรอกข้อมูลแล้วเราจะติดต่อกลับภายใน 24 ชั่วโมง หรือโทรหาเราได้เลย</p>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📞</div>
+        <div><h4>โทรศัพท์</h4><p>086-XXX-XXXX</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <div><h4>พื้นที่ให้บริการ</h4><p>ชลบุรี และพื้นที่ใกล้เคียง</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🕐</div>
+        <div><h4>เวลาทำการ</h4><p>จันทร์–เสาร์ 08:00–18:00 น.</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">💬</div>
+        <div><h4>LINE</h4><p>@janisgarden</p></div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3>ขอใบเสนอราคาฟรี</h3>
+      <p>กรอกข้อมูลด้านล่าง เราจะติดต่อกลับโดยเร็วที่สุด</p>
+      <div id="formContent">
+        <div class="form-row">
+          <div class="form-group">
+            <label>ชื่อ-นามสกุล *</label>
+            <input type="text" id="fname" placeholder="ชื่อของคุณ">
+          </div>
+          <div class="form-group">
+            <label>เบอร์โทรศัพท์ *</label>
+            <input type="tel" id="fphone" placeholder="0XX-XXX-XXXX">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>บริการที่สนใจ *</label>
+          <select id="fservice">
+            <option value="">-- เลือกบริการ --</option>
+            <option>รับจัดสวน</option>
+            <option>ปลูกต้นไม้</option>
+            <option>ตัดแต่งต้นไม้ / ตัดหน้าดิน</option>
+            <option>ขอคำแนะนำเรื่องต้นไม้</option>
+            <option>ซื้อต้นไม้ / อุปกรณ์</option>
+            <option>อื่นๆ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>รายละเอียดเพิ่มเติม</label>
+          <textarea id="fmessage" placeholder="บอกเล่าสิ่งที่ต้องการ เช่น ขนาดพื้นที่ งบประมาณ หรือรูปแบบที่ชอบ..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>ที่อยู่ / พื้นที่ให้บริการ</label>
+          <input type="text" id="faddress" placeholder="ตำบล อำเภอ จังหวัด">
+        </div>
+        <button class="btn-submit" id="submitBtn" onclick="submitForm()">ส่งข้อมูล ขอใบเสนอราคา</button>
+      </div>
+      <div class="form-success" id="formSuccess">
+        <div class="check">✅</div>
+        <h4>ส่งข้อมูลเรียบร้อยแล้ว!</h4>
+        <p>เราได้รับข้อมูลของคุณแล้ว และจะติดต่อกลับภายใน 24 ชั่วโมง<br>ขอบคุณที่ไว้วางใจ Janis Garden 🌿</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <h4>🌿 Janis Garden</h4>
+    <p>บริการจัดสวนครบวงจร ด้วยความรักและความเชี่ยวชาญ<br>สร้างสรรค์พื้นที่สีเขียวที่คุณฝันถึง</p>
+  </div>
+  <div>
+    <h4>บริการ</h4>
+    <ul>
+      <li><a href="#services">รับจัดสวน</a></li>
+      <li><a href="#services">ปลูกต้นไม้</a></li>
+      <li><a href="#services">ตัดแต่งต้นไม้</a></li>
+      <li><a href="#services">ให้คำแนะนำ</a></li>
+      <li><a href="#shop">ร้านค้า</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>ติดต่อ</h4>
+    <ul>
+      <li><a href="tel:086XXXXXXX">📞 086-XXX-XXXX</a></li>
+      <li><a href="#">💬 LINE: @janisgarden</a></li>
+      <li><a href="#">📍 ชลบุรีและใกล้เคียง</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© 2025 Janis Garden. All rights reserved.</span>
+  <a class="admin-link" href="#" onclick="openAdminModal(event)">🔐 Admin</a>
+</div>
+
+<!-- PORTFOLIO MODAL -->
+<div class="modal-overlay" id="portfolioModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('portfolioModal').classList.remove('active')">✕</button>
+    <img id="modalImg" src="" alt="">
+    <div class="modal-info">
+      <h3 id="modalTitle"></h3>
+      <p id="modalDesc"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="admin-modal-overlay" id="adminLoginModal">
+  <div class="admin-login-box">
+    <div class="leaf">🌿</div>
+    <h2>Admin Login</h2>
+    <p>เข้าสู่ระบบจัดการรูปภาพผลงาน</p>
+    <p class="admin-err" id="adminErr">Username หรือ Password ไม่ถูกต้อง</p>
+    <input type="text" id="adminUser" placeholder="Username">
+    <input type="password" id="adminPass" placeholder="Password">
+    <button class="admin-login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <br><br>
+    <a href="#" onclick="document.getElementById('adminLoginModal').classList.remove('active');return false;" style="font-size:0.85rem;color:var(--text-light);">ยกเลิก</a>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-header">
+    <h2>🌿 Janis Garden — Admin Panel</h2>
+    <div class="admin-header-btns">
+      <button class="admin-save-btn" onclick="savePortfolio()">💾 บันทึกการเปลี่ยนแปลง</button>
+      <button class="admin-close-btn" onclick="closeAdmin()">ออกจากระบบ</button>
+    </div>
+  </div>
+  <div class="admin-content">
+    <p class="admin-section-title">จัดการรูปภาพผลงาน</p>
+    <div class="admin-grid" id="adminGrid"></div>
+    <p style="font-size:0.85rem;color:var(--text-light);margin-top:-1rem;">* การเปลี่ยนแปลงจะมีผลเมื่อคลิก "บันทึก" เท่านั้น</p>
+  </div>
+</div>
+
+<div class="admin-toast" id="adminToast">✅ บันทึกเรียบร้อยแล้ว</div>
+
+<script>
+// =========================================
+// PORTFOLIO DATA (stored in localStorage)
+// =========================================
+const DEFAULT_PORTFOLIO = [
+  { id:1, src:'https://images.unsplash.com/photo-1558904541-efa843a96f01?w=800&q=80', title:'สวนสไตล์ญี่ปุ่น', desc:'จัดสวนหินและไม้แบบญี่ปุ่น สงบ เรียบง่าย', cat:'garden', wide:true },
+  { id:2, src:'https://images.unsplash.com/photo-1585914924626-15adac1e6402?w=800&q=80', title:'ตัดแต่งพุ่มไม้', desc:'บริการตัดแต่งทรงพุ่มให้สวยงาม', cat:'trim', tall:true },
+  { id:3, src:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80', title:'สวนดอกไม้สีสัน', desc:'ปลูกไม้ดอกหลากหลายพันธุ์', cat:'plant' },
+  { id:4, src:'https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=800&q=80', title:'ตกแต่งด้วยกระถาง', desc:'จัดมุมสวนด้วยกระถางดินเผาและไม้ประดับ', cat:'deco' },
+  { id:5, src:'https://images.unsplash.com/photo-1585059895524-72359e06133a?w=800&q=80', title:'สวนในบ้าน', desc:'ออกแบบสวนภายในพื้นที่จำกัด', cat:'garden' },
+  { id:6, src:'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80', title:'ปลูกไม้ประดับ', desc:'ปลูกไม้ประดับในร่มสไตล์ minimal', cat:'plant' },
+];
+
+function getPortfolio() {
+  const stored = localStorage.getItem('janis_portfolio');
+  return stored ? JSON.parse(stored) : DEFAULT_PORTFOLIO;
+}
+function savePortfolioData(data) {
+  localStorage.setItem('janis_portfolio', JSON.stringify(data));
+}
+
+let portfolioData = getPortfolio();
+let currentFilter = 'all';
+
+// =========================================
+// RENDER PORTFOLIO
+// =========================================
+function renderPortfolio() {
+  const grid = document.getElementById('portfolioGrid');
+  const filtered = currentFilter === 'all' ? portfolioData : portfolioData.filter(i => i.cat === currentFilter);
+  grid.innerHTML = filtered.map(item => `
+    <div class="portfolio-item${item.wide?' wide':''}${item.tall?' tall':''}" onclick="openPortfolioModal(${item.id})">
+      <img src="${item.src}" alt="${item.title}" loading="lazy">
+      <div class="portfolio-overlay"><span>${item.title}</span></div>
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentFilter = this.dataset.filter;
+    renderPortfolio();
+  });
+});
+
+function openPortfolioModal(id) {
+  const item = portfolioData.find(i => i.id === id);
+  if(!item) return;
+  document.getElementById('modalImg').src = item.src;
+  document.getElementById('modalTitle').textContent = item.title;
+  document.getElementById('modalDesc').textContent = item.desc;
+  document.getElementById('portfolioModal').classList.add('active');
+}
+
+function closeModal(e) {
+  if(e.target === document.getElementById('portfolioModal'))
+    document.getElementById('portfolioModal').classList.remove('active');
+}
+
+// =========================================
+// CONTACT FORM + GAS INTEGRATION
+// =========================================
+// 🔧 ตั้งค่า GAS URL ที่นี่
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwKrMMOqsLi4dfWI8eDw68SvDf8YsDsdrYbcQVDLTCZ5k8J75Nxjz-72cxIRXAAB0djMg/exec';
+
+async function submitForm() {
+  const name = document.getElementById('fname').value.trim();
+  const phone = document.getElementById('fphone').value.trim();
+  const service = document.getElementById('fservice').value;
+  const message = document.getElementById('fmessage').value.trim();
+  const address = document.getElementById('faddress').value.trim();
+
+  if(!name || !phone || !service) {
+    alert('กรุณากรอกชื่อ เบอร์โทร และบริการที่สนใจ');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'กำลังส่ง...';
+
+  const payload = { name, phone, service, message, address, timestamp: new Date().toLocaleString('th-TH') };
+
+  try {
+    if(GAS_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+      await fetch(GAS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+    document.getElementById('formContent').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'ส่งข้อมูล ขอใบเสนอราคา';
+    alert('เกิดข้อผิดพลาด กรุณาลองใหม่หรือติดต่อทางโทรศัพท์');
+  }
+}
+
+// =========================================
+// ADMIN AUTH
+// =========================================
+// 🔐 เปลี่ยน username/password ที่นี่
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'janis2025';
+
+function openAdminModal(e) {
+  e.preventDefault();
+  document.getElementById('adminLoginModal').classList.add('active');
+  document.getElementById('adminErr').style.display = 'none';
+  document.getElementById('adminUser').value = '';
+  document.getElementById('adminPass').value = '';
+}
+
+function doLogin() {
+  const u = document.getElementById('adminUser').value;
+  const p = document.getElementById('adminPass').value;
+  if(u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('adminLoginModal').classList.remove('active');
+    openAdminPanel();
+  } else {
+    document.getElementById('adminErr').style.display = 'block';
+  }
+}
+
+document.getElementById('adminPass').addEventListener('keydown', e => {
+  if(e.key === 'Enter') doLogin();
+});
+
+// =========================================
+// ADMIN PANEL
+// =========================================
+function openAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  panel.classList.add('active');
+  renderAdminGrid();
+}
+
+function closeAdmin() {
+  document.getElementById('adminPanel').classList.remove('active');
+}
+
+function renderAdminGrid() {
+  const grid = document.getElementById('adminGrid');
+  grid.innerHTML = portfolioData.map((item, idx) => `
+    <div class="admin-item" data-id="${item.id}">
+      <div class="admin-item-img">
+        <img id="adminImg${item.id}" src="${item.src}" alt="${item.title}">
+      </div>
+      <div class="admin-item-info">
+        <input type="text" id="adminTitle${item.id}" value="${item.title}" placeholder="ชื่อผลงาน">
+        <input type="text" id="adminDesc${item.id}" value="${item.desc}" placeholder="คำอธิบาย">
+        <select id="adminCat${item.id}" style="width:100%;padding:0.45rem 0.7rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:Sarabun,sans-serif;font-size:0.85rem;margin-bottom:0.5rem;">
+          <option value="garden" ${item.cat==='garden'?'selected':''}>จัดสวน</option>
+          <option value="trim" ${item.cat==='trim'?'selected':''}>ตัดแต่ง</option>
+          <option value="plant" ${item.cat==='plant'?'selected':''}>ปลูกต้นไม้</option>
+          <option value="deco" ${item.cat==='deco'?'selected':''}>ตกแต่ง</option>
+        </select>
+        <div class="admin-item-actions">
+          <button class="btn-replace" onclick="document.getElementById('file${item.id}').click()">📷 เปลี่ยนรูป</button>
+          <button class="btn-replace" style="background:#fee;color:#c0392b;border-color:#f5a5a5;" onclick="deleteItem(${item.id})">🗑️</button>
+        </div>
+        <input type="file" accept="image/*" class="hidden-file" id="file${item.id}" onchange="replaceImage(event,${item.id})">
+      </div>
+    </div>
+  `).join('') + `
+    <div>
+      <div class="add-photo-btn" onclick="document.getElementById('addPhotoFile').click()">
+        <span>＋</span>เพิ่มรูปภาพใหม่
+      </div>
+      <input type="file" accept="image/*" class="hidden-file" id="addPhotoFile" onchange="addNewItem(event)">
+    </div>
+  `;
+}
+
+function replaceImage(e, id) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    document.getElementById('adminImg'+id).src = ev.target.result;
+    const item = portfolioData.find(i => i.id === id);
+    if(item) item.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function deleteItem(id) {
+  if(!confirm('ต้องการลบรูปภาพนี้?')) return;
+  portfolioData = portfolioData.filter(i => i.id !== id);
+  renderAdminGrid();
+}
+
+function addNewItem(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const newId = Date.now();
+    portfolioData.push({
+      id: newId, src: ev.target.result,
+      title: 'ผลงานใหม่', desc: 'คำอธิบายผลงาน',
+      cat: 'garden', wide: false, tall: false
+    });
+    renderAdminGrid();
+  };
+  reader.readAsDataURL(file);
+}
+
+function savePortfolio() {
+  portfolioData.forEach(item => {
+    const t = document.getElementById('adminTitle'+item.id);
+    const d = document.getElementById('adminDesc'+item.id);
+    const c = document.getElementById('adminCat'+item.id);
+    if(t) item.title = t.value;
+    if(d) item.desc = d.value;
+    if(c) item.cat = c.value;
+  });
+  savePortfolioData(portfolioData);
+  renderPortfolio();
+  const toast = document.getElementById('adminToast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// =========================================
+// SCROLL REVEAL
+// =========================================
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+revealEls.forEach(el => observer.observe(el));
+
+// =========================================
+// SMOOTH SCROLL
+// =========================================
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if(href === '#') return;
+    const target = document.querySelector(href);
+    if(target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+
+// INIT
+renderPortfolio();
+</script>
+</body>
+</html>
