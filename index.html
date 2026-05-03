@@ -967,7 +967,7 @@ async function submitForm() {
   const payload = { name, phone, service, message, address, timestamp: new Date().toLocaleString('th-TH') };
 
   try {
-    if(GAS_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+    if(GAS_URL !== 'https://script.google.com/macros/s/AKfycbwKrMMOqsLi4dfWI8eDw68SvDf8YsDsdrYbcQVDLTCZ5k8J75Nxjz-72cxIRXAAB0djMg/exec') {
       await fetch(GAS_URL, {
         method: 'POST',
         mode: 'no-cors',
