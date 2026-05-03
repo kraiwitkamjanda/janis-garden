@@ -967,14 +967,13 @@ async function submitForm() {
   const payload = { name, phone, service, message, address, timestamp: new Date().toLocaleString('th-TH') };
 
   try {
-    if(GAS_URL !== 'https://script.google.com/macros/s/AKfycbwKrMMOqsLi4dfWI8eDw68SvDf8YsDsdrYbcQVDLTCZ5k8J75Nxjz-72cxIRXAAB0djMg/exec') {
       await fetch(GAS_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload)
       });
-    }
+    
     document.getElementById('formContent').style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
   } catch(e) {
