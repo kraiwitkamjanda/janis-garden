@@ -394,120 +394,6 @@
   .modal-info h3 { font-size: 1.3rem; color: var(--green-dark); margin-bottom: 0.4rem; }
   .modal-info p { color: var(--text-mid); font-size: 0.92rem; }
 
-  /* ADMIN LOGIN MODAL */
-  .admin-modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(45,90,39,0.92); z-index: 9999;
-    align-items: center; justify-content: center;
-  }
-  .admin-modal-overlay.active { display: flex; }
-  .admin-login-box {
-    background: #fff; border-radius: var(--radius);
-    padding: 3rem; width: 100%; max-width: 420px;
-    text-align: center;
-  }
-  .admin-login-box .leaf { font-size: 3rem; margin-bottom: 1rem; }
-  .admin-login-box h2 {
-    font-family: 'Playfair Display', serif;
-    color: var(--green-dark); margin-bottom: 0.4rem;
-  }
-  .admin-login-box p { font-size: 0.88rem; color: var(--text-light); margin-bottom: 2rem; }
-  .admin-login-box input {
-    width: 100%; padding: 0.8rem 1.2rem;
-    border: 1.5px solid rgba(74,140,66,0.3);
-    border-radius: var(--radius-sm);
-    font-family: 'Sarabun', sans-serif; font-size: 0.95rem;
-    margin-bottom: 1rem; outline: none;
-  }
-  .admin-login-box input:focus { border-color: var(--green-mid); }
-  .admin-login-btn {
-    width: 100%; padding: 0.9rem;
-    background: var(--green-dark); color: #fff;
-    border: none; border-radius: 30px;
-    font-family: 'Sarabun', sans-serif; font-size: 1rem; font-weight: 600;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .admin-login-btn:hover { background: var(--green-mid); }
-  .admin-err { color: #c0392b; font-size: 0.85rem; margin-bottom: 0.8rem; display: none; }
-
-  /* ADMIN PANEL */
-  .admin-panel {
-    display: none; position: fixed; inset: 0;
-    background: var(--cream); z-index: 9998; overflow-y: auto;
-  }
-  .admin-panel.active { display: block; }
-  .admin-header {
-    background: var(--green-dark); color: #fff;
-    padding: 1rem 5%;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .admin-header h2 {
-    font-family: 'Playfair Display', serif; font-size: 1.4rem;
-  }
-  .admin-header-btns { display: flex; gap: 0.8rem; align-items: center; }
-  .admin-close-btn, .admin-save-btn {
-    padding: 0.5rem 1.4rem; border-radius: 30px;
-    font-family: 'Sarabun', sans-serif; font-size: 0.9rem; font-weight: 600;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .admin-close-btn { background: transparent; border: 1.5px solid rgba(255,255,255,0.5); color: #fff; }
-  .admin-close-btn:hover { background: rgba(255,255,255,0.15); }
-  .admin-save-btn { background: var(--brown-light); border: none; color: #fff; }
-  .admin-save-btn:hover { background: var(--brown-mid); }
-
-  .admin-content { padding: 2rem 5%; }
-  .admin-section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem; color: var(--green-dark); margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem; border-bottom: 2px solid var(--green-pale);
-  }
-  .admin-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
-  .admin-item {
-    background: #fff; border-radius: var(--radius);
-    border: 1.5px solid rgba(74,140,66,0.2); overflow: hidden;
-  }
-  .admin-item-img { height: 160px; position: relative; }
-  .admin-item-img img { width: 100%; height: 100%; object-fit: cover; }
-  .admin-item-info { padding: 1rem; }
-  .admin-item-info input {
-    width: 100%; padding: 0.5rem 0.7rem;
-    border: 1px solid rgba(74,140,66,0.25); border-radius: 6px;
-    font-family: 'Sarabun', sans-serif; font-size: 0.85rem;
-    margin-bottom: 0.5rem; outline: none;
-  }
-  .admin-item-actions { display: flex; gap: 0.5rem; }
-  .btn-replace {
-    flex: 1; padding: 0.45rem; font-size: 0.8rem;
-    background: var(--green-pale); color: var(--green-dark);
-    border: 1px solid var(--green-light); border-radius: 6px;
-    cursor: pointer; font-family: 'Sarabun', sans-serif; font-weight: 600;
-  }
-  .btn-replace:hover { background: var(--green-light); color: #fff; }
-  .hidden-file { display: none; }
-  .add-photo-btn {
-    height: 160px; border: 2px dashed var(--green-light);
-    border-radius: var(--radius); display: flex;
-    flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; background: var(--green-pale);
-    color: var(--green-mid); transition: all 0.2s;
-    font-size: 0.9rem; font-weight: 500; gap: 0.5rem;
-    padding: 1rem;
-  }
-  .add-photo-btn:hover { background: rgba(74,140,66,0.15); border-color: var(--green-dark); }
-  .add-photo-btn span { font-size: 2rem; }
-  .admin-toast {
-    position: fixed; bottom: 2rem; right: 2rem;
-    background: var(--green-dark); color: #fff;
-    padding: 1rem 1.5rem; border-radius: var(--radius-sm);
-    font-size: 0.9rem; font-weight: 500; z-index: 99999;
-    transform: translateY(100px); opacity: 0;
-    transition: all 0.35s;
-  }
-  .admin-toast.show { transform: translateY(0); opacity: 1; }
-
   /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(30px); transition: all 0.65s ease; }
   .reveal.visible { opacity: 1; transform: none; }
@@ -746,8 +632,7 @@
       <p>กรอกข้อมูลแล้วเราจะติดต่อกลับภายใน 24 ชั่วโมง หรือโทรหาเราได้เลย</p>
       <div class="contact-detail">
         <div class="contact-detail-icon">📞</div>
-        <div><h4>โทรศัพท์</h4><p>095-472-0539 (วิไล)</p></div>
-        <div><h4>โทรศัพท์</h4><p>084-000-2745 (พีระ)</p></div>
+        <div><h4>โทรศัพท์</h4><p>095-472-0539 (วิไล)</p><p>084-000-2745 (พีระ)</p></div> 
       </div>
       <div class="contact-detail">
         <div class="contact-detail-icon">📍</div>
@@ -759,10 +644,14 @@
       </div>
       <div class="contact-detail">
         <div class="contact-detail-icon">💬</div>
-        <div><h4>LINE</h4><p>@361ezbmb</p></div>
-        <img src="https://qr-official.line.me/gs/M_361ezbmb_GW.png" 
-        alt="LINE QR Code"
-        style="width:120px;margin-top:0.5rem;border-radius:8px;">
+        <div>
+          <h4>LINE</h4>
+          <p>@361ezbmb</p>
+          <div style="display:inline-flex;flex-direction:column;align-items:center;margin-top:0.8rem;padding:0.8rem;background:#fff;border-radius:12px;border:1.5px solid rgba(74,140,66,0.2);box-shadow:0 2px 10px rgba(45,90,39,0.1);">
+            <img src="https://qr-official.line.me/gs/M_361ezbmb_GW.png" alt="LINE QR Code" style="width:110px;height:110px;border-radius:6px;display:block;">
+            <span style="margin-top:0.5rem;font-size:0.75rem;font-weight:600;color:var(--green-dark);">สแกนเพื่อเพิ่มเพื่อน</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="contact-form">
@@ -829,15 +718,34 @@
   <div>
     <h4>ติดต่อ</h4>
     <ul>
-      <li><a href="tel:086XXXXXXX">📞 086-XXX-XXXX</a></li>
-      <li><a href="#">💬 LINE: @janisgarden</a></li>
-      <li><a href="#">📍 ชลบุรีและใกล้เคียง</a></li>
+      <li><a href="tel:0840002745">📞 084-000-2745</a></li>
+      <li><a href="https://line.me/R/ti/p/%40361ezbmb" target="_blank">💬 LINE: @361ezbmb</a></li>
+      <li><a href="https://maps.app.goo.gl/3DB6ogTaByimgoE79" target="_blank">📍 Google Map ร้าน Janis Garden</a></li>
     </ul>
   </div>
 </footer>
 <div class="footer-bottom">
   <span>© 2025 Janis Garden. All rights reserved.</span>
   <a class="admin-link" href="#" onclick="openAdminModal(event)">🔐 Admin</a>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div id="adminLoginModal" style="display:none;position:fixed;inset:0;background:rgba(45,90,39,0.92);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:3rem;width:100%;max-width:420px;text-align:center;">
+    <div style="font-size:3rem;margin-bottom:1rem;">🌿</div>
+    <h2 style="font-family:'Playfair Display',serif;color:#2d5a27;margin-bottom:0.4rem;">Admin Login</h2>
+    <p style="font-size:0.88rem;color:#888;margin-bottom:2rem;">เข้าสู่ระบบจัดการรูปภาพผลงาน</p>
+    <p id="adminErr" style="color:#c0392b;font-size:0.85rem;margin-bottom:0.8rem;display:none;">❌ Password ไม่ถูกต้อง</p>
+    <p id="adminLoading" style="color:#4a8c42;font-size:0.85rem;margin-bottom:0.8rem;display:none;">⏳ กำลังตรวจสอบ...</p>
+    <input type="password" id="adminPass" placeholder="Password"
+      style="width:100%;padding:0.8rem 1.2rem;border:1.5px solid rgba(74,140,66,0.3);border-radius:8px;font-family:'Sarabun',sans-serif;font-size:0.95rem;margin-bottom:1rem;box-sizing:border-box;outline:none;">
+    <button onclick="doLogin()"
+      style="width:100%;padding:0.9rem;background:#2d5a27;color:#fff;border:none;border-radius:30px;font-family:'Sarabun',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;">
+      เข้าสู่ระบบ
+    </button>
+    <br><br>
+    <a href="#" onclick="closeAdminModal();return false;" style="font-size:0.85rem;color:#888;">ยกเลิก</a>
+  </div>
 </div>
 
 <!-- PORTFOLIO MODAL -->
@@ -851,39 +759,6 @@
     </div>
   </div>
 </div>
-
-<!-- ADMIN LOGIN MODAL -->
-<div class="admin-modal-overlay" id="adminLoginModal">
-  <div class="admin-login-box">
-    <div class="leaf">🌿</div>
-    <h2>Admin Login</h2>
-    <p>เข้าสู่ระบบจัดการรูปภาพผลงาน</p>
-    <p class="admin-err" id="adminErr">Username หรือ Password ไม่ถูกต้อง</p>
-    <input type="text" id="adminUser" placeholder="Username">
-    <input type="password" id="adminPass" placeholder="Password">
-    <button class="admin-login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
-    <br><br>
-    <a href="#" onclick="document.getElementById('adminLoginModal').classList.remove('active');return false;" style="font-size:0.85rem;color:var(--text-light);">ยกเลิก</a>
-  </div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div class="admin-panel" id="adminPanel">
-  <div class="admin-header">
-    <h2>🌿 Janis Garden — Admin Panel</h2>
-    <div class="admin-header-btns">
-      <button class="admin-save-btn" onclick="savePortfolio()">💾 บันทึกการเปลี่ยนแปลง</button>
-      <button class="admin-close-btn" onclick="closeAdmin()">ออกจากระบบ</button>
-    </div>
-  </div>
-  <div class="admin-content">
-    <p class="admin-section-title">จัดการรูปภาพผลงาน</p>
-    <div class="admin-grid" id="adminGrid"></div>
-    <p style="font-size:0.85rem;color:var(--text-light);margin-top:-1rem;">* การเปลี่ยนแปลงจะมีผลเมื่อคลิก "บันทึก" เท่านั้น</p>
-  </div>
-</div>
-
-<div class="admin-toast" id="adminToast">✅ บันทึกเรียบร้อยแล้ว</div>
 
 <script>
 // =========================================
@@ -950,7 +825,7 @@ function closeModal(e) {
 // CONTACT FORM + GAS INTEGRATION
 // =========================================
 // 🔧 ตั้งค่า GAS URL ที่นี่
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwKrMMOqsLi4dfWI8eDw68SvDf8YsDsdrYbcQVDLTCZ5k8J75Nxjz-72cxIRXAAB0djMg/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQdv4DNV3TVU8ZKNYwZODc2GRcelDW4aPZYIo3oxstaE2uF0Is6cP4AbFi292xs4l6FA/exec';
 
 async function submitForm() {
   const name = document.getElementById('fname').value.trim();
@@ -988,113 +863,231 @@ async function submitForm() {
 }
 
 // =========================================
-// ADMIN AUTH
+// ADMIN AUTH — เช็ค Password ที่ GAS (ปลอดภัย)
 // =========================================
-// 🔐 เปลี่ยน username/password ที่นี่
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'janis2025';
-
 function openAdminModal(e) {
   e.preventDefault();
-  document.getElementById('adminLoginModal').classList.add('active');
+  const modal = document.getElementById('adminLoginModal');
+  modal.style.display = 'flex';
   document.getElementById('adminErr').style.display = 'none';
-  document.getElementById('adminUser').value = '';
+  document.getElementById('adminLoading').style.display = 'none';
   document.getElementById('adminPass').value = '';
+  setTimeout(() => document.getElementById('adminPass').focus(), 100);
 }
 
-function doLogin() {
-  const u = document.getElementById('adminUser').value;
-  const p = document.getElementById('adminPass').value;
-  if(u === ADMIN_USER && p === ADMIN_PASS) {
-    document.getElementById('adminLoginModal').classList.remove('active');
-    openAdminPanel();
-  } else {
-    document.getElementById('adminErr').style.display = 'block';
+function closeAdminModal() {
+  document.getElementById('adminLoginModal').style.display = 'none';
+}
+
+async function doLogin() {
+  const pass = document.getElementById('adminPass').value;
+  if (!pass) return;
+
+  document.getElementById('adminErr').style.display = 'none';
+  document.getElementById('adminLoading').style.display = 'block';
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'checkPassword', password: pass })
+    });
+    const data = await res.json();
+    document.getElementById('adminLoading').style.display = 'none';
+
+    if (data.success) {
+      closeAdminModal();
+      openAdminPanel();
+    } else {
+      document.getElementById('adminErr').style.display = 'block';
+    }
+  } catch(err) {
+    document.getElementById('adminLoading').style.display = 'none';
+    alert('เกิดข้อผิดพลาด กรุณาลองใหม่');
   }
 }
 
 document.getElementById('adminPass').addEventListener('keydown', e => {
-  if(e.key === 'Enter') doLogin();
+  if (e.key === 'Enter') doLogin();
 });
 
+// =========================================
+// UPLOAD รูปไป Google Drive ผ่าน GAS
+// =========================================
+async function uploadToDrive(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async function(ev) {
+      const base64 = ev.target.result.split(',')[1];
+      try {
+        const res = await callGAS('uploadImage', {
+          base64: base64,
+          mimeType: file.type,
+          fileName: file.name
+        });
+        if (res.success) resolve(res.url);
+        else reject('Upload failed');
+      } catch(e) { reject(e); }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function showUploading(imgEl) {
+  imgEl.style.opacity = '0.4';
+  imgEl.insertAdjacentHTML('afterend', '<p id="uploadingMsg" style="font-size:0.8rem;color:#4a8c42;text-align:center;">⏳ กำลังอัปโหลด...</p>');
+}
+function hideUploading(imgEl) {
+  imgEl.style.opacity = '1';
+  const msg = document.getElementById('uploadingMsg');
+  if (msg) msg.remove();
+}
+
+async function replaceImage(e, id) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const imgEl = document.getElementById('adminImg'+id);
+  showUploading(imgEl);
+  try {
+    const url = await uploadToDrive(file);
+    imgEl.src = url;
+    const item = portfolioData.find(i => i.id == id);
+    if (item) item.src = url;
+    showToast('✅ อัปโหลดรูปสำเร็จ');
+  } catch(e) {
+    showToast('❌ อัปโหลดไม่สำเร็จ');
+  }
+  hideUploading(imgEl);
+}
+
+function deleteItem(id) {
+  if (!confirm('ต้องการลบรูปภาพนี้?')) return;
+  portfolioData = portfolioData.filter(i => i.id !== id);
+  renderAdminGrid();
+}
+
+async function addNewItem(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  showToast('⏳ กำลังอัปโหลด...');
+  try {
+    const url = await uploadToDrive(file);
+    const newId = Date.now();
+    portfolioData.push({
+      id: newId, src: url,
+      title: 'ผลงานใหม่', desc: 'คำอธิบายผลงาน', cat: 'garden'
+    });
+    renderAdminGrid();
+    showToast('✅ เพิ่มรูปสำเร็จ');
+  } catch(e) {
+    showToast('❌ อัปโหลดไม่สำเร็จ');
+  }
+}
+
+async function replaceShopImage(e, id) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const imgEl = document.getElementById('shopImg'+id);
+  showUploading(imgEl);
+  try {
+    const url = await uploadToDrive(file);
+    imgEl.src = url;
+    const item = shopData.find(i => i.id == id);
+    if (item) item.src = url;
+    showToast('✅ อัปโหลดรูปสำเร็จ');
+  } catch(e) {
+    showToast('❌ อัปโหลดไม่สำเร็จ');
+  }
+  hideUploading(imgEl);
+}
+
+async function addNewShopItem(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  showToast('⏳ กำลังอัปโหลด...');
+  try {
+    const url = await uploadToDrive(file);
+    shopData.push({
+      id: Date.now(), src: url,
+      name: 'สินค้าใหม่', desc: 'คำอธิบายสินค้า',
+      price: '0', unit: 'ชิ้น', tag: ''
+    });
+    renderAdminShop();
+    showToast('✅ เพิ่มสินค้าสำเร็จ');
+  } catch(e) {
+    showToast('❌ อัปโหลดไม่สำเร็จ');
+  }
+}
+
+// =========================================
 // =========================================
 // ADMIN PANEL
 // =========================================
 function openAdminPanel() {
-  const panel = document.getElementById('adminPanel');
-  panel.classList.add('active');
+  let panel = document.getElementById('adminPanel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'adminPanel';
+    panel.style.cssText = 'display:block;position:fixed;inset:0;background:#f0f7ee;z-index:9998;overflow-y:auto;';
+    panel.innerHTML = `
+      <div style="background:#2d5a27;color:#fff;padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin:0;">🌿 Janis Garden — Admin Panel</h2>
+        <div style="display:flex;gap:0.8rem;">
+          <button onclick="savePortfolio()" style="padding:0.5rem 1.4rem;border-radius:30px;background:#c4956a;border:none;color:#fff;font-family:'Sarabun',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;">💾 บันทึก</button>
+          <button onclick="closeAdmin()" style="padding:0.5rem 1.4rem;border-radius:30px;background:transparent;border:1.5px solid rgba(255,255,255,0.5);color:#fff;font-family:'Sarabun',sans-serif;font-size:0.9rem;cursor:pointer;">ออกจากระบบ</button>
+        </div>
+      </div>
+      <div style="padding:2rem 5%;">
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#2d5a27;border-bottom:2px solid #e8f5e3;padding-bottom:0.5rem;margin-bottom:1.5rem;">จัดการรูปภาพผลงาน</p>
+        <div id="adminGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;"></div>
+      </div>
+      <div id="adminToast" style="position:fixed;bottom:2rem;right:2rem;background:#2d5a27;color:#fff;padding:1rem 1.5rem;border-radius:8px;font-size:0.9rem;z-index:99999;transform:translateY(100px);opacity:0;transition:all 0.35s;">✅ บันทึกเรียบร้อยแล้ว</div>
+    `;
+    document.body.appendChild(panel);
+  } else {
+    panel.style.display = 'block';
+  }
   renderAdminGrid();
 }
 
 function closeAdmin() {
-  document.getElementById('adminPanel').classList.remove('active');
+  document.getElementById('adminPanel').style.display = 'none';
 }
 
 function renderAdminGrid() {
   const grid = document.getElementById('adminGrid');
-  grid.innerHTML = portfolioData.map((item, idx) => `
-    <div class="admin-item" data-id="${item.id}">
-      <div class="admin-item-img">
-        <img id="adminImg${item.id}" src="${item.src}" alt="${item.title}">
+  grid.innerHTML = portfolioData.map(item => `
+    <div style="background:#fff;border-radius:16px;border:1.5px solid rgba(74,140,66,0.2);overflow:hidden;">
+      <div style="height:160px;position:relative;">
+        <img id="adminImg${item.id}" src="${item.src}" style="width:100%;height:100%;object-fit:cover;">
       </div>
-      <div class="admin-item-info">
-        <input type="text" id="adminTitle${item.id}" value="${item.title}" placeholder="ชื่อผลงาน">
-        <input type="text" id="adminDesc${item.id}" value="${item.desc}" placeholder="คำอธิบาย">
-        <select id="adminCat${item.id}" style="width:100%;padding:0.45rem 0.7rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:Sarabun,sans-serif;font-size:0.85rem;margin-bottom:0.5rem;">
+      <div style="padding:1rem;">
+        <input type="text" id="adminTitle${item.id}" value="${item.title}" placeholder="ชื่อผลงาน"
+          style="width:100%;padding:0.5rem 0.7rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;margin-bottom:0.5rem;box-sizing:border-box;">
+        <input type="text" id="adminDesc${item.id}" value="${item.desc}" placeholder="คำอธิบาย"
+          style="width:100%;padding:0.5rem 0.7rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;margin-bottom:0.5rem;box-sizing:border-box;">
+        <select id="adminCat${item.id}" style="width:100%;padding:0.45rem 0.7rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;margin-bottom:0.5rem;">
           <option value="garden" ${item.cat==='garden'?'selected':''}>จัดสวน</option>
           <option value="trim" ${item.cat==='trim'?'selected':''}>ตัดแต่ง</option>
           <option value="plant" ${item.cat==='plant'?'selected':''}>ปลูกต้นไม้</option>
           <option value="deco" ${item.cat==='deco'?'selected':''}>ตกแต่ง</option>
         </select>
-        <div class="admin-item-actions">
-          <button class="btn-replace" onclick="document.getElementById('file${item.id}').click()">📷 เปลี่ยนรูป</button>
-          <button class="btn-replace" style="background:#fee;color:#c0392b;border-color:#f5a5a5;" onclick="deleteItem(${item.id})">🗑️</button>
+        <div style="display:flex;gap:0.5rem;">
+          <button onclick="document.getElementById('file${item.id}').click()"
+            style="flex:1;padding:0.45rem;font-size:0.8rem;background:#e8f5e3;color:#2d5a27;border:1px solid #7db87a;border-radius:6px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:600;">📷 เปลี่ยนรูป</button>
+          <button onclick="deleteItem(${item.id})"
+            style="padding:0.45rem 0.8rem;font-size:0.8rem;background:#fee;color:#c0392b;border:1px solid #f5a5a5;border-radius:6px;cursor:pointer;">🗑️</button>
         </div>
-        <input type="file" accept="image/*" class="hidden-file" id="file${item.id}" onchange="replaceImage(event,${item.id})">
+        <input type="file" accept="image/*" id="file${item.id}" style="display:none;" onchange="replaceImage(event,${item.id})">
       </div>
     </div>
   `).join('') + `
-    <div>
-      <div class="add-photo-btn" onclick="document.getElementById('addPhotoFile').click()">
-        <span>＋</span>เพิ่มรูปภาพใหม่
-      </div>
-      <input type="file" accept="image/*" class="hidden-file" id="addPhotoFile" onchange="addNewItem(event)">
+    <div onclick="document.getElementById('addPhotoFile').click()"
+      style="height:160px;border:2px dashed #7db87a;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#e8f5e3;color:#4a8c42;font-size:0.9rem;font-weight:500;gap:0.5rem;">
+      <span style="font-size:2rem;">＋</span>เพิ่มรูปภาพใหม่
     </div>
+    <input type="file" accept="image/*" id="addPhotoFile" style="display:none;" onchange="addNewItem(event)">
   `;
-}
-
-function replaceImage(e, id) {
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    document.getElementById('adminImg'+id).src = ev.target.result;
-    const item = portfolioData.find(i => i.id === id);
-    if(item) item.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function deleteItem(id) {
-  if(!confirm('ต้องการลบรูปภาพนี้?')) return;
-  portfolioData = portfolioData.filter(i => i.id !== id);
-  renderAdminGrid();
-}
-
-function addNewItem(e) {
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    const newId = Date.now();
-    portfolioData.push({
-      id: newId, src: ev.target.result,
-      title: 'ผลงานใหม่', desc: 'คำอธิบายผลงาน',
-      cat: 'garden', wide: false, tall: false
-    });
-    renderAdminGrid();
-  };
-  reader.readAsDataURL(file);
 }
 
 function savePortfolio() {
@@ -1109,11 +1102,11 @@ function savePortfolio() {
   savePortfolioData(portfolioData);
   renderPortfolio();
   const toast = document.getElementById('adminToast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
+  toast.style.transform = 'translateY(0)';
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.transform = 'translateY(100px)'; toast.style.opacity = '0'; }, 3000);
 }
 
-// =========================================
 // SCROLL REVEAL
 // =========================================
 const revealEls = document.querySelectorAll('.reveal');

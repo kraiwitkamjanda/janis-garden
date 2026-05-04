@@ -1,28 +1,75 @@
 const CHANNEL_ACCESS_TOKEN = 'kTlyS3TjBPd23QdOOpEs27Eyf4b4ulgEb6AvUjSEX8umk37/QkOJOpMIBcNDC/ASMAtz/V6sW6KHLZpGNqtG+5Xd5Toq+/ONH7IviNIxdaMzSaTMTTW3bylCWfxNZxDzYKHvoaQoTsg9R20M2HfzzAdB04t89/1O/w1cDnyilFU=';
-const GROUP_ID = 'C242167ccf179a5ae98df127ff150154c';
+const GROUP_ID = 'C54aa0f5c06905e3fbb6ea2888e314693';
+//Ufb16cc5b103a3aa948e883d810e6457d
+//C54aa0f5c06905e3fbb6ea2888e314693
+const ADMIN_PASSWORD = 'janis2025';
+const FOLDER_ID = '10BHwlg2-Wgxfvoh9q1PO6Z4yj-PprMBg';
 
 function doPost(e) {
   try {
-    const raw = JSON.parse(e.postData.contents);
+    const body = JSON.parse(e.postData.contents);
 
-    // 1. บันทึก Sheet
+    // เช็ค Password จาก Admin
+    if (body.action === 'checkPassword') {
+      const ok = body.password === ADMIN_PASSWORD;
+      return ContentService
+      .createTextOutput(JSON.stringify({ success: ok }))
+      .setMimeType(ContentService.MimeType.JSON);
+}
+
+    if (body.action === 'uploadPortfolio') {
+      const folder = DriveApp.getFolderById(FOLDER_ID);
+      const blob = Utilities.newBlob(Utilities.base64Decode(body.image), body.mimeType, body.fileName);
+      const file = folder.createFile(blob);
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  
+      const imageUrl = "https://lh3.googleusercontent.com/d/" + file.getId();
+  
+  // บันทึกลง Sheet ชื่อ 'Portfolio'
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName('Portfolio') || ss.insertSheet('Portfolio');
+  sheet.appendRow([new Date(), body.title, body.desc, body.cat, imageUrl]);
+  
+  return ContentService.createTextOutput(JSON.stringify({ success: true, url: imageUrl }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+    // ถ้าเป็น Webhook จาก LINE → แค่ดัก Group ID ลง Sheet แล้วจบ
+/*    if (body.events) {
+      body.events.forEach(event => {
+        if (event.source && event.source.groupId) {
+          const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+          sheet.appendRow([
+            new Date().toLocaleString('th-TH'),
+            '✅ GROUP ID',
+            event.source.groupId,
+            event.source.userId || '-'
+          ]);
+        }
+      });
+      return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    */
+
+    // เช็คว่าเป็นข้อมูลจาก Contact Form จริงๆ
+    // ต้องมี name และ phone ถึงจะประมวลผล
+    if (!body.name || !body.phone) {
+      return ContentService.createTextOutput('IGNORED');
+    }
+
+    // ข้อมูลจาก Contact Form → บันทึก Sheet + ส่ง LINE
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     sheet.appendRow([
-      raw.timestamp,
-      raw.name,
-      raw.phone,
-      raw.service,
-      raw.message || '-',
-      raw.address || '-'
+      body.timestamp, body.name, body.phone,
+      body.service, body.message || '-', body.address || '-'
     ]);
-
-    // 2. ส่ง LINE ทันที
-    sendLineMessage(raw);
+    sendLineMessage(body);
 
     return ContentService.createTextOutput('OK');
+
   } catch (err) {
-    Logger.log('doPost Error: ' + err.message);
-    return ContentService.createTextOutput('ERROR: ' + err.message);
+    Logger.log('ERROR: ' + err.message);
+    return ContentService.createTextOutput('ERROR');
   }
 }
 
@@ -65,3 +112,4 @@ function testSendLine() {
   };
   sendLineMessage(fakeData);
 }
+
