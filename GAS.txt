@@ -1,21 +1,11 @@
-// ==========================================
-// ตั้งค่าตรงนี้
-// ==========================================
 const CHANNEL_ACCESS_TOKEN = 'kTlyS3TjBPd23QdOOpEs27Eyf4b4ulgEb6AvUjSEX8umk37/QkOJOpMIBcNDC/ASMAtz/V6sW6KHLZpGNqtG+5Xd5Toq+/ONH7IviNIxdaMzSaTMTTW3bylCWfxNZxDzYKHvoaQoTsg9R20M2HfzzAdB04t89/1O/w1cDnyilFU=';
-const GROUP_ID = 'C242167ccf179a5ae98df127ff150154c'; // จะได้จากการ log ด้านล่าง
+const GROUP_ID = 'C242167ccf179a5ae98df127ff150154c';
 
-// ==========================================
-// รับข้อมูลจากเว็บไซต์ (Contact Form)
-// ==========================================
-
-// ==========================================
-// ส่วนที่ 2: รับข้อมูลจาก Web (doPost)
-// ==========================================
 function doPost(e) {
   try {
-    let raw = JSON.parse(e.postData.contents);
-    
-    // บันทึกลง Sheet อย่างเดียว เพื่อความรวดเร็วและลด Error ด้าน Permission
+    const raw = JSON.parse(e.postData.contents);
+
+    // 1. บันทึก Sheet
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     sheet.appendRow([
       raw.timestamp,
@@ -26,31 +16,26 @@ function doPost(e) {
       raw.address || '-'
     ]);
 
+    // 2. ส่ง LINE ทันที
+    sendLineMessage(raw);
+
     return ContentService.createTextOutput('OK');
   } catch (err) {
     Logger.log('doPost Error: ' + err.message);
-    return ContentService.createTextOutput('ERROR');
+    return ContentService.createTextOutput('ERROR: ' + err.message);
   }
 }
 
-// ==========================================
-// ส่วนที่ 3: ฟังก์ชันส่ง LINE (ให้ Trigger เป็นคนเรียกใช้)
-// ==========================================
-function autoSendLineTrigger(e) {
-  // ดึงข้อมูลจากแถวที่เพิ่งบันทึกล่าสุด
-  const sheet = e.source.getActiveSheet();
-  const lastRow = sheet.getLastRow();
-  const values = sheet.getRange(lastRow, 1, 1, 6).getValues()[0];
-
+function sendLineMessage(data) {
   const msg =
     '🌿 มีลูกค้าใหม่! — Janis Garden\n' +
     '━━━━━━━━━━━━━━\n' +
-    '👤 ชื่อ: ' + values[1] + '\n' +
-    '📞 เบอร์: ' + values[2] + '\n' +
-    '🛠 บริการ: ' + values[3] + '\n' +
-    '📝 รายละเอียด: ' + values[4] + '\n' +
-    '📍 ที่อยู่: ' + values[5] + '\n' +
-    '🕐 เวลา: ' + values[0];
+    '👤 ชื่อ: ' + data.name + '\n' +
+    '📞 เบอร์: ' + data.phone + '\n' +
+    '🛠 บริการ: ' + data.service + '\n' +
+    '📝 รายละเอียด: ' + (data.message || '-') + '\n' +
+    '📍 ที่อยู่: ' + (data.address || '-') + '\n' +
+    '🕐 เวลา: ' + data.timestamp;
 
   const options = {
     method: 'POST',
@@ -65,115 +50,10 @@ function autoSendLineTrigger(e) {
     muteHttpExceptions: true
   };
 
-  UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', options);
-}
-
-
-/*function doPost(e) {
-  try {
-    // รองรับทั้ง JSON และ text/plain
-    let raw;
-    try {
-      raw = JSON.parse(e.postData.contents);
-    } catch(parseErr) {
-      Logger.log('Parse error: ' + parseErr + ' | raw: ' + e.postData.contents);
-      return ContentService.createTextOutput('PARSE ERROR');
-    }
-
-    // ถ้าเป็น Webhook จาก LINE
-    if (raw.events) {
-      handleLineWebhook(raw);
-      return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-
-    // ข้อมูลจาก Contact Form
-    Logger.log('รับข้อมูล: ' + JSON.stringify(raw)); // ← log ดูก่อน
-    saveToSheet(raw);
-
-    try {
-      sendLineMessage(raw);
-      Logger.log('ส่ง LINE สำเร็จ');
-    } catch(lineErr) {
-      Logger.log('LINE error: ' + lineErr.message); // ← จับ error LINE แยก
-    }
-
-    return ContentService.createTextOutput('OK');
-
-  } catch (err) {
-    Logger.log('ERROR: ' + err.message);
-    return ContentService.createTextOutput('ERROR: ' + err.message);
-  }
-}
-
-// ==========================================
-// บันทึกลง Google Sheet
-// ==========================================
-function saveToSheet(data) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.appendRow([
-    data.timestamp,
-    data.name,
-    data.phone,
-    data.service,
-    data.message || '-',
-    data.address || '-'
-  ]);
-}
-
-// ==========================================
-// ส่งข้อความไปยัง LINE Group
-// ==========================================
-function sendLineMessage(data) {
-
-  const customerName = (data && data.name) ? data.name : 'ไม่ระบุชื่อ';
-  const customerPhone = (data && data.phone) ? data.phone : 'ไม่ระบุเบอร์';
-
-  const msg =
-    '🌿 มีลูกค้าใหม่! — Janis Garden\n' +
-    '━━━━━━━━━━━━━━\n' +
-    '👤 ชื่อ: ' + data.name + '\n' +
-    '📞 เบอร์: ' + data.phone + '\n' +
-    '🛠 บริการ: ' + data.service + '\n' +
-    '📝 รายละเอียด: ' + (data.message || '-') + '\n' +
-    '📍 ที่อยู่: ' + (data.address || '-') + '\n' +
-    '🕐 เวลา: ' + data.timestamp;
-
-  const payload = {
-    to: GROUP_ID,
-    messages: [{ type: 'text', text: msg }]
-  };
-
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN
-    },
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  };
-
   const res = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', options);
   Logger.log('LINE response: ' + res.getContentText());
-}*/
-
-// ==========================================
-// ดักจับ Webhook จาก LINE เพื่อหา Group ID
-// ==========================================
-
-/*function handleLineWebhook(body) {
-  body.events.forEach(event => {
-    if (event.source && event.source.groupId) {
-      Logger.log('✅ Group ID คือ: ' + event.source.groupId);
-    }
-  });
 }
-*/
 
-// ==========================================
-// ทดสอบโดยไม่ต้องกรอกฟอร์ม — กด Run ที่นี่
-// ==========================================
 function testSendLine() {
   const fakeData = {
     timestamp: new Date().toLocaleString('th-TH'),
@@ -183,6 +63,5 @@ function testSendLine() {
     message: 'ทดสอบการส่งข้อความ LINE Messaging API',
     address: 'ชลบุรี'
   };
-  saveToSheet(fakeData);
   sendLineMessage(fakeData);
 }
