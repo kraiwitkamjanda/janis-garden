@@ -93,9 +93,15 @@ function doPost(e) {
 
 // Helper — return JSON response
 function ok(data) {
-  return ContentService
+  const output = ContentService
     .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
+  return output;
+}
+
+function doOptions(e) {
+  return ContentService.createTextOutput('')
+    .setMimeType(ContentService.MimeType.TEXT);
 }
 
 // ส่งข้อความ LINE Group
@@ -137,4 +143,36 @@ function testSendLine() {
     message: 'ทดสอบการส่งข้อความ',
     address: 'ชลบุรี'
   });
+}
+
+  function testDriveUpload() {
+  const folder = DriveApp.getFolderById('10BHwlg2-Wgxfvoh9q1PO6Z4yj-PprMBg');
+  const file = folder.createFile('test.txt', 'ทดสอบ', MimeType.PLAIN_TEXT);
+  Logger.log('✅ สำเร็จ! File ID: ' + file.getId());
+  file.setTrashed(true); // ลบทิ้งหลังทดสอบ
+}
+
+  function testDriveUpload2() {
+  try {
+    const folder = DriveApp.getFolderById('10BHwlg2-Wgxfvoh9q1PO6Z4yj-PprMBg');
+    const testBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+    const blob = Utilities.newBlob(
+      Utilities.base64Decode(testBase64),
+      'image/png',
+      'test.png'
+    );
+    const file = folder.createFile(blob);
+    
+    // เปลี่ยนวิธี setSharing
+    Drive.Permissions.insert(
+      { role: 'reader', type: 'anyone' },
+      file.getId()
+    );
+    
+    const url = 'https://drive.google.com/uc?export=view&id=' + file.getId();
+    Logger.log('✅ URL: ' + url);
+    file.setTrashed(true);
+  } catch(err) {
+    Logger.log('❌ Error: ' + err.message);
+  }
 }

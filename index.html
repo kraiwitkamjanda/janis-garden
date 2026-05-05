@@ -772,9 +772,16 @@ async function callGAS(action, extra = {}) {
   const res = await fetch(GAS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action, ...extra })
+    body: JSON.stringify({ action, ...extra }),
+    redirect: 'follow'
   });
-  return await res.json();
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch(e) {
+    console.error('callGAS parse error:', text);
+    throw new Error('Response ไม่ใช่ JSON: ' + text.substring(0, 100));
+  }
 }
 
 async function loadPortfolio() {
@@ -859,7 +866,7 @@ function closeModal(e) {
 // 🔧 ตั้งค่า GAS URL ที่นี่
 // =========================================
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQdv4DNV3TVU8ZKNYwZODc2GRcelDW4aPZYIo3oxstaE2uF0Is6cP4AbFi292xs4l6FA/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbysgNvWvTmEgvf18PoLVImV8FTo6l5j15kAIhKLlBeCc7MuaeLg1z-_Wj81gFxT4i9h6A/exec';
 
 async function submitForm() {
   const name = document.getElementById('fname').value.trim();
