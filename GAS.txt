@@ -1,78 +1,104 @@
 const CHANNEL_ACCESS_TOKEN = 'kTlyS3TjBPd23QdOOpEs27Eyf4b4ulgEb6AvUjSEX8umk37/QkOJOpMIBcNDC/ASMAtz/V6sW6KHLZpGNqtG+5Xd5Toq+/ONH7IviNIxdaMzSaTMTTW3bylCWfxNZxDzYKHvoaQoTsg9R20M2HfzzAdB04t89/1O/w1cDnyilFU=';
 const GROUP_ID = 'C54aa0f5c06905e3fbb6ea2888e314693';
-//Ufb16cc5b103a3aa948e883d810e6457d
-//C54aa0f5c06905e3fbb6ea2888e314693
 const ADMIN_PASSWORD = 'janis2025';
 const FOLDER_ID = '10BHwlg2-Wgxfvoh9q1PO6Z4yj-PprMBg';
 
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-    // เช็ค Password จาก Admin
+    // ① เช็ค Password Admin
     if (body.action === 'checkPassword') {
-      const ok = body.password === ADMIN_PASSWORD;
-      return ContentService
-      .createTextOutput(JSON.stringify({ success: ok }))
-      .setMimeType(ContentService.MimeType.JSON);
-}
+      return ok({ success: body.password === ADMIN_PASSWORD });
+    }
 
-    if (body.action === 'uploadPortfolio') {
+    // ② อัปโหลดรูปไป Google Drive
+    if (body.action === 'uploadImage') {
       const folder = DriveApp.getFolderById(FOLDER_ID);
-      const blob = Utilities.newBlob(Utilities.base64Decode(body.image), body.mimeType, body.fileName);
+      const blob = Utilities.newBlob(
+        Utilities.base64Decode(body.base64),
+        body.mimeType,
+        body.fileName
+      );
       const file = folder.createFile(blob);
       file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  
-      const imageUrl = "https://lh3.googleusercontent.com/d/" + file.getId();
-  
-  // บันทึกลง Sheet ชื่อ 'Portfolio'
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName('Portfolio') || ss.insertSheet('Portfolio');
-  sheet.appendRow([new Date(), body.title, body.desc, body.cat, imageUrl]);
-  
-  return ContentService.createTextOutput(JSON.stringify({ success: true, url: imageUrl }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-    // ถ้าเป็น Webhook จาก LINE → แค่ดัก Group ID ลง Sheet แล้วจบ
-/*    if (body.events) {
-      body.events.forEach(event => {
-        if (event.source && event.source.groupId) {
-          const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-          sheet.appendRow([
-            new Date().toLocaleString('th-TH'),
-            '✅ GROUP ID',
-            event.source.groupId,
-            event.source.userId || '-'
-          ]);
-        }
-      });
-      return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
-        .setMimeType(ContentService.MimeType.JSON);
+      const url = 'https://lh3.googleusercontent.com/d/' + file.getId();
+      return ok({ success: true, url: url });
     }
-    */
 
-    // เช็คว่าเป็นข้อมูลจาก Contact Form จริงๆ
-    // ต้องมี name และ phone ถึงจะประมวลผล
+    // ③ ดึงข้อมูล Portfolio
+    if (body.action === 'getPortfolio') {
+      const sheet = ss.getSheetByName('Portfolio');
+      const rows = sheet.getDataRange().getValues().slice(1);
+      const data = rows.filter(r => r[0]).map(r => ({
+        id: r[0], title: r[1], desc: r[2], cat: r[3], src: r[4]
+      }));
+      return ok(data);
+    }
+
+    // ④ บันทึก Portfolio ลง Sheet
+    if (body.action === 'savePortfolio') {
+      const sheet = ss.getSheetByName('Portfolio');
+      sheet.clearContents();
+      sheet.appendRow(['id', 'title', 'desc', 'cat', 'src']);
+      body.data.forEach(item => {
+        sheet.appendRow([item.id, item.title, item.desc, item.cat, item.src]);
+      });
+      return ok({ success: true });
+    }
+
+    // ⑤ ดึงข้อมูล Shop
+    if (body.action === 'getShop') {
+      const sheet = ss.getSheetByName('Shop');
+      const rows = sheet.getDataRange().getValues().slice(1);
+      const data = rows.filter(r => r[0]).map(r => ({
+        id: r[0], name: r[1], desc: r[2], price: r[3],
+        unit: r[4], tag: r[5], src: r[6]
+      }));
+      return ok(data);
+    }
+
+    // ⑥ บันทึก Shop ลง Sheet
+    if (body.action === 'saveShop') {
+      const sheet = ss.getSheetByName('Shop');
+      sheet.clearContents();
+      sheet.appendRow(['id', 'name', 'desc', 'price', 'unit', 'tag', 'src']);
+      body.data.forEach(item => {
+        sheet.appendRow([
+          item.id, item.name, item.desc, item.price,
+          item.unit, item.tag || '', item.src
+        ]);
+      });
+      return ok({ success: true });
+    }
+
+    // ⑦ Contact Form → บันทึก Sheet + ส่ง LINE
     if (!body.name || !body.phone) {
       return ContentService.createTextOutput('IGNORED');
     }
-
-    // ข้อมูลจาก Contact Form → บันทึก Sheet + ส่ง LINE
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const sheet = ss.getSheetByName('Sheet1') || ss.getActiveSheet();
     sheet.appendRow([
       body.timestamp, body.name, body.phone,
       body.service, body.message || '-', body.address || '-'
     ]);
     sendLineMessage(body);
-
     return ContentService.createTextOutput('OK');
 
   } catch (err) {
     Logger.log('ERROR: ' + err.message);
-    return ContentService.createTextOutput('ERROR');
+    return ContentService.createTextOutput('ERROR: ' + err.message);
   }
 }
 
+// Helper — return JSON response
+function ok(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ส่งข้อความ LINE Group
 function sendLineMessage(data) {
   const msg =
     '🌿 มีลูกค้าใหม่! — Janis Garden\n' +
@@ -101,15 +127,14 @@ function sendLineMessage(data) {
   Logger.log('LINE response: ' + res.getContentText());
 }
 
+// ทดสอบส่ง LINE
 function testSendLine() {
-  const fakeData = {
+  sendLineMessage({
     timestamp: new Date().toLocaleString('th-TH'),
     name: 'ทดสอบ ระบบ',
     phone: '0812345678',
     service: 'รับจัดสวน',
-    message: 'ทดสอบการส่งข้อความ LINE Messaging API',
+    message: 'ทดสอบการส่งข้อความ',
     address: 'ชลบุรี'
-  };
-  sendLineMessage(fakeData);
+  });
 }
-

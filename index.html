@@ -553,7 +553,7 @@
     <h2 class="section-title">ต้นไม้และของตกแต่งสวน</h2>
     <p class="section-sub">คัดสรรสินค้าคุณภาพดี พร้อมส่งถึงบ้านคุณ</p>
   </div>
-  <div class="shop-grid">
+  <div class="shop-grid" id="shopGrid">
     <div class="shop-card">
       <div class="shop-img">
         <img src="https://images.unsplash.com/photo-1585059895524-72359e06133a?w=400&q=80" alt="กุหลาบ">
@@ -762,27 +762,59 @@
 
 <script>
 // =========================================
-// PORTFOLIO DATA (stored in localStorage)
+// DATA — ดึงจาก GAS/Sheet ทั้งหมด
 // =========================================
-const DEFAULT_PORTFOLIO = [
-  { id:1, src:'https://images.unsplash.com/photo-1558904541-efa843a96f01?w=800&q=80', title:'สวนสไตล์ญี่ปุ่น', desc:'จัดสวนหินและไม้แบบญี่ปุ่น สงบ เรียบง่าย', cat:'garden', wide:true },
-  { id:2, src:'https://images.unsplash.com/photo-1585914924626-15adac1e6402?w=800&q=80', title:'ตัดแต่งพุ่มไม้', desc:'บริการตัดแต่งทรงพุ่มให้สวยงาม', cat:'trim', tall:true },
-  { id:3, src:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80', title:'สวนดอกไม้สีสัน', desc:'ปลูกไม้ดอกหลากหลายพันธุ์', cat:'plant' },
-  { id:4, src:'https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=800&q=80', title:'ตกแต่งด้วยกระถาง', desc:'จัดมุมสวนด้วยกระถางดินเผาและไม้ประดับ', cat:'deco' },
-  { id:5, src:'https://images.unsplash.com/photo-1585059895524-72359e06133a?w=800&q=80', title:'สวนในบ้าน', desc:'ออกแบบสวนภายในพื้นที่จำกัด', cat:'garden' },
-  { id:6, src:'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80', title:'ปลูกไม้ประดับ', desc:'ปลูกไม้ประดับในร่มสไตล์ minimal', cat:'plant' },
-];
-
-function getPortfolio() {
-  const stored = localStorage.getItem('janis_portfolio');
-  return stored ? JSON.parse(stored) : DEFAULT_PORTFOLIO;
-}
-function savePortfolioData(data) {
-  localStorage.setItem('janis_portfolio', JSON.stringify(data));
-}
-
-let portfolioData = getPortfolio();
+let portfolioData = [];
+let shopData = [];
 let currentFilter = 'all';
+
+async function callGAS(action, extra = {}) {
+  const res = await fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action, ...extra })
+  });
+  return await res.json();
+}
+
+async function loadPortfolio() {
+  const grid = document.getElementById('portfolioGrid');
+  if(grid) grid.innerHTML = '<p style="color:#888;text-align:center;padding:2rem;">⏳ กำลังโหลดผลงาน...</p>';
+  try {
+    const data = await callGAS('getPortfolio');
+    portfolioData = Array.isArray(data) ? data : [];
+  } catch(e) { portfolioData = []; }
+  renderPortfolio();
+}
+
+async function loadShop() {
+  const grid = document.getElementById('shopGrid');
+  if(grid) grid.innerHTML = '<p style="color:#888;text-align:center;padding:2rem;grid-column:1/-1;">⏳ กำลังโหลดสินค้า...</p>';
+  try {
+    const data = await callGAS('getShop');
+    shopData = Array.isArray(data) ? data : [];
+  } catch(e) { shopData = []; }
+  renderShop();
+}
+
+// วาด UI สินค้าหน้าเว็บ
+function renderShop() {
+  const grid = document.getElementById('shopGrid');
+  if(!grid) return;
+  grid.innerHTML = shopData.map(item => `
+    <div class="shop-card">
+      <div class="shop-img">
+        <img src="${item.src}" alt="${item.name}">
+        ${item.tag ? `<span class="shop-tag">${item.tag}</span>` : ''}
+      </div>
+      <div class="shop-info">
+        <h3>${item.name}</h3>
+        <p>${item.desc}</p>
+        <div class="shop-price">฿${item.price} <span>/ ${item.unit}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
 
 // =========================================
 // RENDER PORTFOLIO
@@ -825,6 +857,8 @@ function closeModal(e) {
 // CONTACT FORM + GAS INTEGRATION
 // =========================================
 // 🔧 ตั้งค่า GAS URL ที่นี่
+// =========================================
+
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQdv4DNV3TVU8ZKNYwZODc2GRcelDW4aPZYIo3oxstaE2uF0Is6cP4AbFi292xs4l6FA/exec';
 
 async function submitForm() {
@@ -843,12 +877,19 @@ async function submitForm() {
   btn.disabled = true;
   btn.textContent = 'กำลังส่ง...';
 
-  const payload = { name, phone, service, message, address, timestamp: new Date().toLocaleString('th-TH') };
+  const payload = { 
+    name: name, 
+    phone: phone, 
+    service: service, 
+    message: message, 
+    address: address, 
+    timestamp: new Date().toLocaleString('th-TH') 
+  };
 
   try {
+      // ใช้ fetch แบบปกติ (ไม่ใช้ no-cors) เพื่อให้สามารถรับผลตอบแทนจาก GAS ได้
       await fetch(GAS_URL, {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload)
       });
@@ -859,6 +900,7 @@ async function submitForm() {
     btn.disabled = false;
     btn.textContent = 'ส่งข้อมูล ขอใบเสนอราคา';
     alert('เกิดข้อผิดพลาด กรุณาลองใหม่หรือติดต่อทางโทรศัพท์');
+    console.error(e);
   }
 }
 
@@ -1030,16 +1072,21 @@ function openAdminPanel() {
     panel.id = 'adminPanel';
     panel.style.cssText = 'display:block;position:fixed;inset:0;background:#f0f7ee;z-index:9998;overflow-y:auto;';
     panel.innerHTML = `
-      <div style="background:#2d5a27;color:#fff;padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;">
+      <div style="background:#2d5a27;color:#fff;padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;">
         <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin:0;">🌿 Janis Garden — Admin Panel</h2>
         <div style="display:flex;gap:0.8rem;">
-          <button onclick="savePortfolio()" style="padding:0.5rem 1.4rem;border-radius:30px;background:#c4956a;border:none;color:#fff;font-family:'Sarabun',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;">💾 บันทึก</button>
-          <button onclick="closeAdmin()" style="padding:0.5rem 1.4rem;border-radius:30px;background:transparent;border:1.5px solid rgba(255,255,255,0.5);color:#fff;font-family:'Sarabun',sans-serif;font-size:0.9rem;cursor:pointer;">ออกจากระบบ</button>
+          <button onclick="saveAllData()" style="padding:0.5rem 1.4rem;border-radius:30px;background:#c4956a;border:none;color:#fff;font-family:'Sarabun',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;">💾 บันทึกทั้งหมด</button>
+          <button onclick="closeAdmin()" style="padding:0.5rem 1.4rem;border-radius:30px;background:transparent;border:1.5px solid rgba(255,255,255,0.5);color:#fff;font-family:'Sarabun',sans-serif;font-size:0.9rem;cursor:pointer;">ปิด</button>
         </div>
       </div>
       <div style="padding:2rem 5%;">
-        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#2d5a27;border-bottom:2px solid #e8f5e3;padding-bottom:0.5rem;margin-bottom:1.5rem;">จัดการรูปภาพผลงาน</p>
-        <div id="adminGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;"></div>
+        <!-- ส่วน Portfolio -->
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#2d5a27;border-bottom:2px solid #e8f5e3;padding-bottom:0.5rem;margin-bottom:1.5rem;">จัดการผลงาน (Portfolio)</p>
+        <div id="adminGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:3rem;"></div>
+        
+        <!-- ส่วน Shop -->
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#2d5a27;border-bottom:2px solid #e8f5e3;padding-bottom:0.5rem;margin-bottom:1.5rem;">จัดการสินค้า (Shop)</p>
+        <div id="adminShopGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;"></div>
       </div>
       <div id="adminToast" style="position:fixed;bottom:2rem;right:2rem;background:#2d5a27;color:#fff;padding:1rem 1.5rem;border-radius:8px;font-size:0.9rem;z-index:99999;transform:translateY(100px);opacity:0;transition:all 0.35s;">✅ บันทึกเรียบร้อยแล้ว</div>
     `;
@@ -1048,6 +1095,7 @@ function openAdminPanel() {
     panel.style.display = 'block';
   }
   renderAdminGrid();
+  renderAdminShop(); // เรียกวาดส่วน Shop ด้วย
 }
 
 function closeAdmin() {
@@ -1090,7 +1138,56 @@ function renderAdminGrid() {
   `;
 }
 
-function savePortfolio() {
+// วาด UI แอดมินของ Shop
+function renderAdminShop() {
+  const grid = document.getElementById('adminShopGrid');
+  if(!grid) return;
+  grid.innerHTML = shopData.map(item => `
+    <div style="background:#fff;border-radius:16px;border:1.5px solid rgba(74,140,66,0.2);overflow:hidden;">
+      <div style="height:160px;position:relative;">
+        <img id="shopImg${item.id}" src="${item.src}" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div style="padding:1rem;">
+        <input type="text" id="shopName${item.id}" value="${item.name}" placeholder="ชื่อสินค้า" style="width:100%;padding:0.5rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;margin-bottom:0.5rem;box-sizing:border-box;">
+        <input type="text" id="shopDesc${item.id}" value="${item.desc}" placeholder="คำอธิบาย" style="width:100%;padding:0.5rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;margin-bottom:0.5rem;box-sizing:border-box;">
+        
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+          <input type="number" id="shopPrice${item.id}" value="${item.price}" placeholder="ราคา" style="width:50%;padding:0.5rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;box-sizing:border-box;">
+          <input type="text" id="shopUnit${item.id}" value="${item.unit}" placeholder="หน่วย (เช่น ต้น)" style="width:50%;padding:0.5rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;box-sizing:border-box;">
+        </div>
+        
+        <input type="text" id="shopTag${item.id}" value="${item.tag || ''}" placeholder="ป้ายกำกับ (เช่น ยอดนิยม, ใหม่)" style="width:100%;padding:0.5rem;border:1px solid rgba(74,140,66,0.25);border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;margin-bottom:0.5rem;box-sizing:border-box;">
+        
+        <div style="display:flex;gap:0.5rem;">
+          <button onclick="document.getElementById('shopFile${item.id}').click()" style="flex:1;padding:0.45rem;font-size:0.8rem;background:#e8f5e3;color:#2d5a27;border:1px solid #7db87a;border-radius:6px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:600;">📷 เปลี่ยนรูป</button>
+          <button onclick="deleteShopItem(${item.id})" style="padding:0.45rem 0.8rem;font-size:0.8rem;background:#fee;color:#c0392b;border:1px solid #f5a5a5;border-radius:6px;cursor:pointer;">🗑️</button>
+        </div>
+        <input type="file" accept="image/*" id="shopFile${item.id}" style="display:none;" onchange="replaceShopImage(event,${item.id})">
+      </div>
+    </div>
+  `).join('') + `
+    <div onclick="document.getElementById('addShopFile').click()" style="height:160px;border:2px dashed #7db87a;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#e8f5e3;color:#4a8c42;font-size:0.9rem;font-weight:500;gap:0.5rem;">
+      <span style="font-size:2rem;">＋</span>เพิ่มสินค้าใหม่
+    </div>
+    <input type="file" accept="image/*" id="addShopFile" style="display:none;" onchange="addNewShopItem(event)">
+  `;
+}
+
+// ฟังก์ชันลบสินค้า
+function deleteShopItem(id) {
+  if (!confirm('ต้องการลบสินค้านี้?')) return;
+  shopData = shopData.filter(i => i.id !== id);
+  renderAdminShop();
+}
+
+// รวมฟังก์ชันบันทึกข้อมูล (แทน savePortfolio เดิม)
+async function saveAllData() {
+  const toast = document.getElementById('adminToast');
+  toast.textContent = '⏳ กำลังเตรียมข้อมูล...';
+  toast.style.transform = 'translateY(0)';
+  toast.style.opacity = '1';
+
+  // 1. ดึงค่าจากช่องกรอก Portfolio
   portfolioData.forEach(item => {
     const t = document.getElementById('adminTitle'+item.id);
     const d = document.getElementById('adminDesc'+item.id);
@@ -1100,11 +1197,86 @@ function savePortfolio() {
     if(c) item.cat = c.value;
   });
   savePortfolioData(portfolioData);
+
+  // 2. ดึงค่าจากช่องกรอก Shop
+  shopData.forEach(item => {
+    const n = document.getElementById('shopName'+item.id);
+    const d = document.getElementById('shopDesc'+item.id);
+    const p = document.getElementById('shopPrice'+item.id);
+    const u = document.getElementById('shopUnit'+item.id);
+    const t = document.getElementById('shopTag'+item.id);
+    if(n) item.name = n.value;
+    if(d) item.desc = d.value;
+    if(p) item.price = p.value;
+    if(u) item.unit = u.value;
+    if(t) item.tag = t.value;
+  });
+  saveShopDataLocal(shopData);
+
+  // อัปเดตหน้าเว็บทันที
   renderPortfolio();
+  renderShop();
+
+  // ส่งบันทึกลง Google Apps Script
+  try {
+    toast.textContent = '⏳ กำลังบันทึกลง Google Sheet...';
+    // เรียกบันทึก 2 อย่าง
+    await callGAS('savePortfolio', { data: portfolioData });
+    await callGAS('saveShop', { data: shopData });
+    
+    toast.textContent = '✅ บันทึกเรียบร้อยแล้ว';
+  } catch(e) {
+    console.error(e);
+    toast.textContent = '❌ บันทึกลง Sheet ไม่สำเร็จ (บันทึกในเครื่องแล้ว)';
+  }
+
+  setTimeout(() => { 
+    toast.style.transform = 'translateY(100px)'; 
+    toast.style.opacity = '0'; 
+  }, 3000);
+}
+
+// ตัวแจ้งเตือนแบบย่อ (Toast Message)
+function showToast(msg) {
   const toast = document.getElementById('adminToast');
+  if(!toast) return;
+  toast.textContent = msg;
   toast.style.transform = 'translateY(0)';
   toast.style.opacity = '1';
-  setTimeout(() => { toast.style.transform = 'translateY(100px)'; toast.style.opacity = '0'; }, 3000);
+  setTimeout(() => { toast.style.transform = 'translateY(100px)'; toast.style.opacity = '0'; }, 2000);
+}
+
+async function savePortfolio() {
+  portfolioData.forEach(item => {
+    const t = document.getElementById('adminTitle'+item.id);
+    const d = document.getElementById('adminDesc'+item.id);
+    const c = document.getElementById('adminCat'+item.id);
+    if(t) item.title = t.value;
+    if(d) item.desc = d.value;
+    if(c) item.cat = c.value;
+  });
+
+  // อัปเดตข้อมูลลง LocalStorage ก่อน
+  savePortfolioData(portfolioData); 
+  
+  // เพิ่มส่วนนี้: ส่งข้อมูลไปบันทึกลง Google Sheet
+  document.getElementById('adminToast').textContent = '⏳ กำลังบันทึกข้อมูล...';
+  document.getElementById('adminToast').style.transform = 'translateY(0)';
+  document.getElementById('adminToast').style.opacity = '1';
+  
+  try {
+    await callGAS('savePortfolio', { data: portfolioData });
+    document.getElementById('adminToast').textContent = '✅ บันทึกเรียบร้อยแล้ว';
+  } catch(e) {
+    document.getElementById('adminToast').textContent = '❌ เกิดข้อผิดพลาดในการบันทึก';
+  }
+
+  renderPortfolio();
+  
+  setTimeout(() => { 
+    document.getElementById('adminToast').style.transform = 'translateY(100px)'; 
+    document.getElementById('adminToast').style.opacity = '0'; 
+  }, 3000);
 }
 
 // SCROLL REVEAL
@@ -1127,8 +1299,9 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-// INIT
-renderPortfolio();
+// INIT — โหลดข้อมูลจาก GAS/Sheet
+loadPortfolio();
+loadShop();
 </script>
 </body>
 </html>
