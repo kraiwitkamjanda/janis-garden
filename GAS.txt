@@ -8,103 +8,171 @@ function doPost(e) {
     const body = JSON.parse(e.postData.contents);
     const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-    // ① เช็ค Password Admin
+    // check admin
     if (body.action === 'checkPassword') {
-      return ok({ success: body.password === ADMIN_PASSWORD });
+      return ok({
+        success: body.password === ADMIN_PASSWORD
+      });
     }
 
-    // ② อัปโหลดรูปไป Google Drive
+    // upload image
     if (body.action === 'uploadImage') {
-      const folder = DriveApp.getFolderById(FOLDER_ID);
-      const blob = Utilities.newBlob(
-        Utilities.base64Decode(body.base64),
-        body.mimeType,
-        body.fileName
-      );
-      const file = folder.createFile(blob);
-      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-      const url = 'https://lh3.googleusercontent.com/d/' + file.getId();
-      return ok({ success: true, url: url });
+      try {
+        const folder = DriveApp.getFolderById(FOLDER_ID);
+
+        const blob = Utilities.newBlob(
+          Utilities.base64Decode(body.base64),
+          body.mimeType,
+          body.fileName
+        );
+
+        const file = folder.createFile(blob);
+
+        file.setSharing(
+          DriveApp.Access.ANYONE_WITH_LINK,
+          DriveApp.Permission.VIEW
+        );
+
+        const url =
+          'https://drive.google.com/uc?export=view&id=' +
+          file.getId();
+
+        return ok({
+          success: true,
+          id: file.getId(),
+          url: url
+        });
+
+      } catch (err) {
+        return ok({
+          success: false,
+          error: err.message
+        });
+      }
     }
 
-    // ③ ดึงข้อมูล Portfolio
+    // portfolio
     if (body.action === 'getPortfolio') {
       const sheet = ss.getSheetByName('Portfolio');
       const rows = sheet.getDataRange().getValues().slice(1);
-      const data = rows.filter(r => r[0]).map(r => ({
-        id: r[0], title: r[1], desc: r[2], cat: r[3], src: r[4]
-      }));
+
+      const data = rows
+        .filter(r => r[0])
+        .map(r => ({
+          id: r[0],
+          title: r[1],
+          desc: r[2],
+          cat: r[3],
+          src: r[4]
+        }));
+
       return ok(data);
     }
 
-    // ④ บันทึก Portfolio ลง Sheet
     if (body.action === 'savePortfolio') {
       const sheet = ss.getSheetByName('Portfolio');
+
       sheet.clearContents();
-      sheet.appendRow(['id', 'title', 'desc', 'cat', 'src']);
+      sheet.appendRow(['id','title','desc','cat','src']);
+
       body.data.forEach(item => {
-        sheet.appendRow([item.id, item.title, item.desc, item.cat, item.src]);
+        sheet.appendRow([
+          item.id,
+          item.title,
+          item.desc,
+          item.cat,
+          item.src
+        ]);
       });
-      return ok({ success: true });
+
+      return ok({ success:true });
     }
 
-    // ⑤ ดึงข้อมูล Shop
+    // shop
     if (body.action === 'getShop') {
       const sheet = ss.getSheetByName('Shop');
       const rows = sheet.getDataRange().getValues().slice(1);
-      const data = rows.filter(r => r[0]).map(r => ({
-        id: r[0], name: r[1], desc: r[2], price: r[3],
-        unit: r[4], tag: r[5], src: r[6]
-      }));
+
+      const data = rows
+        .filter(r => r[0])
+        .map(r => ({
+          id:r[0],
+          name:r[1],
+          desc:r[2],
+          price:r[3],
+          unit:r[4],
+          tag:r[5],
+          src:r[6]
+        }));
+
       return ok(data);
     }
 
-    // ⑥ บันทึก Shop ลง Sheet
     if (body.action === 'saveShop') {
       const sheet = ss.getSheetByName('Shop');
+
       sheet.clearContents();
-      sheet.appendRow(['id', 'name', 'desc', 'price', 'unit', 'tag', 'src']);
+      sheet.appendRow([
+        'id','name','desc','price','unit','tag','src'
+      ]);
+
       body.data.forEach(item => {
         sheet.appendRow([
-          item.id, item.name, item.desc, item.price,
-          item.unit, item.tag || '', item.src
+          item.id,
+          item.name,
+          item.desc,
+          item.price,
+          item.unit,
+          item.tag || '',
+          item.src
         ]);
       });
-      return ok({ success: true });
+
+      return ok({ success:true });
     }
 
-    // ⑦ Contact Form → บันทึก Sheet + ส่ง LINE
+    // contact form
     if (!body.name || !body.phone) {
       return ContentService.createTextOutput('IGNORED');
     }
-    const sheet = ss.getSheetByName('Sheet1') || ss.getActiveSheet();
+
+    const sheet =
+      ss.getSheetByName('Sheet1') || ss.getActiveSheet();
+
     sheet.appendRow([
-      body.timestamp, body.name, body.phone,
-      body.service, body.message || '-', body.address || '-'
+      body.timestamp,
+      body.name,
+      body.phone,
+      body.service,
+      body.message || '-',
+      body.address || '-'
     ]);
+
     sendLineMessage(body);
+
     return ContentService.createTextOutput('OK');
 
   } catch (err) {
-    Logger.log('ERROR: ' + err.message);
-    return ContentService.createTextOutput('ERROR: ' + err.message);
+    Logger.log(err);
+    return ok({
+      success:false,
+      error:err.message
+    });
   }
 }
 
-// Helper — return JSON response
 function ok(data) {
-  const output = ContentService
+  return ContentService
     .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
-  return output;
 }
 
-function doOptions(e) {
-  return ContentService.createTextOutput('')
+function doOptions() {
+  return ContentService
+    .createTextOutput('')
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
-// ส่งข้อความ LINE Group
 function sendLineMessage(data) {
   const msg =
     '🌿 มีลูกค้าใหม่! — Janis Garden\n' +
@@ -116,63 +184,26 @@ function sendLineMessage(data) {
     '📍 ที่อยู่: ' + (data.address || '-') + '\n' +
     '🕐 เวลา: ' + data.timestamp;
 
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN
-    },
-    payload: JSON.stringify({
-      to: GROUP_ID,
-      messages: [{ type: 'text', text: msg }]
-    }),
-    muteHttpExceptions: true
-  };
-
-  const res = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', options);
-  Logger.log('LINE response: ' + res.getContentText());
+  UrlFetchApp.fetch(
+    'https://api.line.me/v2/bot/message/push',
+    {
+      method:'post',
+      headers:{
+        Authorization:'Bearer '+CHANNEL_ACCESS_TOKEN,
+        'Content-Type':'application/json'
+      },
+      payload:JSON.stringify({
+        to:GROUP_ID,
+        messages:[{
+          type:'text',
+          text:msg
+        }]
+      })
+    }
+  );
 }
 
-// ทดสอบส่ง LINE
-function testSendLine() {
-  sendLineMessage({
-    timestamp: new Date().toLocaleString('th-TH'),
-    name: 'ทดสอบ ระบบ',
-    phone: '0812345678',
-    service: 'รับจัดสวน',
-    message: 'ทดสอบการส่งข้อความ',
-    address: 'ชลบุรี'
-  });
-}
-
-  function testDriveUpload() {
-  const folder = DriveApp.getFolderById('10BHwlg2-Wgxfvoh9q1PO6Z4yj-PprMBg');
-  const file = folder.createFile('test.txt', 'ทดสอบ', MimeType.PLAIN_TEXT);
-  Logger.log('✅ สำเร็จ! File ID: ' + file.getId());
-  file.setTrashed(true); // ลบทิ้งหลังทดสอบ
-}
-
-  function testDriveUpload2() {
-  try {
-    const folder = DriveApp.getFolderById('10BHwlg2-Wgxfvoh9q1PO6Z4yj-PprMBg');
-    const testBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-    const blob = Utilities.newBlob(
-      Utilities.base64Decode(testBase64),
-      'image/png',
-      'test.png'
-    );
-    const file = folder.createFile(blob);
-    
-    // เปลี่ยนวิธี setSharing
-    Drive.Permissions.insert(
-      { role: 'reader', type: 'anyone' },
-      file.getId()
-    );
-    
-    const url = 'https://drive.google.com/uc?export=view&id=' + file.getId();
-    Logger.log('✅ URL: ' + url);
-    file.setTrashed(true);
-  } catch(err) {
-    Logger.log('❌ Error: ' + err.message);
-  }
+function authDrive() {
+  const folder = DriveApp.getFolderById(FOLDER_ID);
+  Logger.log(folder.getName());
 }

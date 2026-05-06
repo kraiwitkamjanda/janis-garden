@@ -1307,22 +1307,36 @@ function renderAdminShop() {
           <div style="display:flex;gap:0.5rem;">
             <button
               onclick="previewShopImage(${item.id})"
-              style="flex:1;padding:0.5rem;font-size:0.8rem;background:#e8f5e3;color:#2d5a27;border:1px solid #7db87a;border-radius:6px;cursor:pointer;font-weight:600;">
+              style="
+                flex:1;
+                padding:0.5rem;
+                font-size:0.8rem;
+                background:#e8f5e3;
+                color:#2d5a27;
+                border:1px solid #7db87a;
+                border-radius:6px;
+                cursor:pointer;
+                font-weight:600;
+              "
+            >
               👁 Preview
             </button>
-            <button
-              onclick="document.getElementById('shopFileUpload${item.id}').click()"
-              style="flex:1;padding:0.5rem;font-size:0.8rem;background:#fff3e0;color:#8b5e3c;border:1px solid #c4956a;border-radius:6px;cursor:pointer;font-weight:600;">
-              📷 อัปโหลด
-            </button>
+
             <button
               onclick="deleteShopItem(${item.id})"
-              style="padding:0.5rem 0.8rem;font-size:0.8rem;background:#fee;color:#c0392b;border:1px solid #f5a5a5;border-radius:6px;cursor:pointer;">
+              style="
+                padding:0.5rem 0.8rem;
+                font-size:0.8rem;
+                background:#fee;
+                color:#c0392b;
+                border:1px solid #f5a5a5;
+                border-radius:6px;
+                cursor:pointer;
+              "
+            >
               🗑️
             </button>
           </div>
-          <input type="file" accept="image/*" id="shopFileUpload${item.id}" style="display:none;"
-            onchange="uploadAndSetImage('shopSrc${item.id}','shopImg${item.id}',shopData,'shopFileUpload${item.id}')">
 
         </div>
       </div>
